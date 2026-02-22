@@ -19,6 +19,16 @@ import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.*
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.unit.dp
+
+
 
 class MainActivity : ComponentActivity() {
 
@@ -48,62 +58,101 @@ fun CalculadoraScreen() {
     var baseAba by remember { mutableStateOf("") }
     var retorno by remember { mutableStateOf("") }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .systemBarsPadding()cer(modifier = Modifier.height(16.dp))
+            .systemBarsPadding()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
 
-                Text("Tipo de Peça:")
+        Text("Calculadora de Peso")
 
-                Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-                Column {
+        Text("Tipo de Peça")
 
-            val linhas = listOf(
-                listOf("Chapa", "Tubo Quadrado"),
-                listOf("Tubo Retangular", "Viga U"),
-                listOf("Viga U Enrijecida")
-            )
+        Spacer(modifier = Modifier.height(8.dp))
 
-            linhas.forEach { linha ->
+        val tipos = listOf(
+            "Chapa",
+            "Tubo Quadrado",
+            "Tubo Retangular",
+            "Viga U",
+            "Viga U Enrijecida"
+        )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+        val linhas = tipos.chunked(2)
 
-                    linha.forEach { tipo ->
+        linhas.forEach { linha ->
 
-                        Button(
-                            onClick = { tipoPeca = tipo },
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(4.dp)
-                        ) {
-                            Text(tipo)
-                        }
-                    }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
 
-                    // se a linha tiver só 1 botão, cria espaço vazio
-                    if (linha.size == 1) {
-                        Spacer(modifier = Modifier.weight(1f))
+                linha.forEach { tipo ->
+
+                    val selecionado = tipoPeca == tipo
+
+                    val corFundo by animateColorAsState(
+                        targetValue = if (selecionado)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant,
+                        label = ""
+                    )
+
+                    val corTexto by animateColorAsState(
+                        targetValue = if (selecionado)
+                            MaterialTheme.colorScheme.onPrimary
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant,
+                        label = ""
+                    )
+
+                    val corBorda by animateColorAsState(
+                        targetValue = if (selecionado)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.outline,
+                        label = ""
+                    )
+
+                    Button(
+                        onClick = { tipoPeca = tipo },
+                        modifier = Modifier
+                            .weight(1f)
+                            .border(
+                                width = 2.dp,
+                                color = corBorda,
+                                shape = RoundedCornerShape(12.dp)
+                            ),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = corFundo,
+                            contentColor = corTexto
+                        )
+                    ) {
+                        Text(tipo)
                     }
                 }
+
+                if (linha.size == 1) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // CAMPOS DINÂMICOS
 
         when (tipoPeca) {
 
             "Chapa" -> {
-
-                OutlinedTextField(
-                    value = comprimento,
-                    onValueChange = { comprimento = it },
-                    label = { Text("Comprimento (m)") }
-                )
 
                 OutlinedTextField(
                     value = largura,
@@ -121,12 +170,6 @@ fun CalculadoraScreen() {
             "Tubo Quadrado" -> {
 
                 OutlinedTextField(
-                    value = comprimento,
-                    onValueChange = { comprimento = it },
-                    label = { Text("Comprimento (m)") }
-                )
-
-                OutlinedTextField(
                     value = largura,
                     onValueChange = { largura = it },
                     label = { Text("Lado Externo (mm)") }
@@ -140,12 +183,6 @@ fun CalculadoraScreen() {
             }
 
             "Tubo Retangular" -> {
-
-                OutlinedTextField(
-                    value = comprimento,
-                    onValueChange = { comprimento = it },
-                    label = { Text("Comprimento (m)") }
-                )
 
                 OutlinedTextField(
                     value = largura,
@@ -179,12 +216,6 @@ fun CalculadoraScreen() {
                     onValueChange = { espessura = it },
                     label = { Text("Espessura (mm)") }
                 )
-
-                OutlinedTextField(
-                    value = comprimento,
-                    onValueChange = { comprimento = it },
-                    label = { Text("Comprimento (m)") }
-                )
             }
 
             "Viga U Enrijecida" -> {
@@ -212,18 +243,19 @@ fun CalculadoraScreen() {
                     onValueChange = { espessura = it },
                     label = { Text("Espessura (mm)") }
                 )
-
-                OutlinedTextField(
-                    value = comprimento,
-                    onValueChange = { comprimento = it },
-                    label = { Text("Comprimento (m)") }
-                )
             }
-
-
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Comprimento SEMPRE por último
+        OutlinedTextField(
+            value = comprimento,
+            onValueChange = { comprimento = it },
+            label = { Text("Comprimento (m)") }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = precoKg,
@@ -242,7 +274,6 @@ fun CalculadoraScreen() {
                 val preco = precoKg.toDoubleOrNull()
                 val baseMm = baseAba.toDoubleOrNull()
                 val retornoMm = retorno.toDoubleOrNull()
-
 
                 if (comp != null && larg != null && espMm != null) {
 
@@ -266,9 +297,7 @@ fun CalculadoraScreen() {
                         }
 
                         "Tubo Quadrado" -> {
-
                             val ladoM = larg / 1000.0
-
                             CalculadoraPeso.calcularTuboQuadrado(
                                 ladoM,
                                 espM,
@@ -278,10 +307,8 @@ fun CalculadoraScreen() {
                         }
 
                         "Tubo Retangular" -> {
-
                             val baseM = larg / 1000.0
                             val alturaM = espMm / 1000.0
-
                             CalculadoraPeso.calcularTuboRetangular(
                                 baseM,
                                 alturaM,
@@ -290,14 +317,11 @@ fun CalculadoraScreen() {
                                 densidade
                             )
                         }
+
                         "Viga U" -> {
-
                             if (baseMm != null) {
-
                                 val alturaM = larg / 1000.0
                                 val baseM = baseMm / 1000.0
-                                val espM = espMm / 1000.0
-
                                 CalculadoraPeso.calcularVigaU(
                                     alturaM,
                                     baseM,
@@ -309,14 +333,10 @@ fun CalculadoraScreen() {
                         }
 
                         "Viga U Enrijecida" -> {
-
                             if (baseMm != null && retornoMm != null) {
-
                                 val alturaM = larg / 1000.0
                                 val baseM = baseMm / 1000.0
                                 val retornoM = retornoMm / 1000.0
-                                val espM = espMm / 1000.0
-
                                 CalculadoraPeso.calcularVigaUEnrijecida(
                                     alturaM,
                                     baseM,
@@ -328,13 +348,14 @@ fun CalculadoraScreen() {
                             } else 0.0
                         }
 
+                        else -> 0.0
+                    }
 
-                        if (preco != null) {
+                    resultado = if (preco != null) {
                         val valorTotal = peso * preco
-                        resultado = "Peso: %.2f kg\nValor estimado: R$ %.2f"
-                            .format(peso, valorTotal)
+                        "Peso: %.2f kg\nValor estimado: R$ %.2f".format(peso, valorTotal)
                     } else {
-                        resultado = "Peso: %.2f kg".format(peso)
+                        "Peso: %.2f kg".format(peso)
                     }
 
                 } else {
