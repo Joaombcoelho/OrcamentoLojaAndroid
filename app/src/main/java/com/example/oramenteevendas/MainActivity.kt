@@ -64,6 +64,8 @@ fun CalculadoraScreen() {
     var baseAba by remember { mutableStateOf("") }
     var retorno by remember { mutableStateOf("") }
     var historico by remember { mutableStateOf(listOf<String>()) }
+    var quantidade by remember { mutableStateOf("1") }
+
 
     Column(
         modifier = Modifier
@@ -228,6 +230,13 @@ fun CalculadoraScreen() {
             label = { Text("Comprimento (m)") }
         )
 
+        OutlinedTextField(
+            value = quantidade,
+            onValueChange = { quantidade = it },
+            label = { Text("Quantidade de Peças") }
+        )
+
+
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
@@ -247,6 +256,7 @@ fun CalculadoraScreen() {
                 val preco = precoKg.toDoubleOrNull()
                 val baseMm = baseAba.toDoubleOrNull()
                 val retornoMm = retorno.toDoubleOrNull()
+                val qtd = quantidade.toIntOrNull() ?: 1
 
                 if (comp != null && larg != null && espMm != null) {
 
@@ -330,6 +340,11 @@ fun CalculadoraScreen() {
                         else -> 0.0
                     }
 
+                    val pesoTotal = peso * qtd
+                    val kgPorMetro = peso / comp
+
+
+
                     val descricao = when (tipoPeca) {
                         "Chapa" -> "Chapa ${largura} x ${espessura} - ${comprimento}m"
                         "Tubo Quadrado" -> "Tubo Quadrado ${largura} x ${espessura} - ${comprimento}m"
@@ -340,10 +355,34 @@ fun CalculadoraScreen() {
                     }
 
                     val textoFinal = if (preco != null) {
-                        val valorTotal = peso * preco
-                        "Peso: %.2f kg | Valor: R$ %.2f".format(peso, valorTotal)
+
+                        val valorUnitario = peso * preco
+                        val valorTotal = pesoTotal * preco
+
+                        """Peso unitário: %.2f kg
+                           Kg/m: %.2f kg/m
+                           Peso total (%d pçs): %.2f kg
+                           Valor total: R$ %.2f
+                                """.trimIndent().format(
+                                peso,
+                                kgPorMetro,
+                                qtd,
+                                pesoTotal,
+                                valorTotal
+                        )
+
                     } else {
-                        "Peso: %.2f kg".format(peso)
+
+                        """
+                            Peso unitário: %.2f kg
+                            Kg/m: %.2f kg/m
+                            Peso total (%d pçs): %.2f kg
+                            """.trimIndent().format(
+                            peso,
+                            kgPorMetro,
+                            qtd,
+                            pesoTotal
+                        )
                     }
 
                     resultado = textoFinal
