@@ -38,23 +38,29 @@ object CalculadoraPeso {
     }
 
     fun calcularTuboRetangular(
-        baseExterna: Double,
-        alturaExterna: Double,
+        base: Double,
+        altura: Double,
         espessura: Double,
         comprimento: Double,
         densidade: Double
     ): Double {
 
-        val baseInterna = baseExterna - (2 * espessura)
-        val alturaInterna = alturaExterna - (2 * espessura)
+        val baseInterna = base - (2 * espessura)
+        val alturaInterna = altura - (2 * espessura)
 
-        val areaExterna = baseExterna * alturaExterna
+        if (baseInterna <= 0 || alturaInterna <= 0) return 0.0
+
+        val areaExterna = base * altura
         val areaInterna = baseInterna * alturaInterna
 
-        val area = areaExterna - areaInterna
+        val areaReal = areaExterna - areaInterna
 
-        return area * comprimento * densidade
+        val volume = areaReal * comprimento
+
+        return volume * densidade
     }
+
+
     fun calcularVigaU(
         altura: Double,
         base: Double,
