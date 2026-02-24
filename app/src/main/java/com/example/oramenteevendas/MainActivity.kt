@@ -64,6 +64,7 @@ fun CalculadoraScreen() {
     var retorno by remember { mutableStateOf("") }
     var historico by remember { mutableStateOf(listOf<String>()) }
     var quantidade by remember { mutableStateOf("1") }
+    val scrollState = rememberScrollState()
 
 
     Column(
@@ -71,6 +72,7 @@ fun CalculadoraScreen() {
             .fillMaxSize()
             .systemBarsPadding()
             .padding(16.dp)
+            .verticalScroll(scrollState)
     ) {
 
         Text("Calculadora de Peso")
