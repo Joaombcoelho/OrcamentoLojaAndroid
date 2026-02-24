@@ -1,5 +1,7 @@
 package com.example.oramenteevendas.utils
 
+
+
 object CalculadoraPeso {
 
     fun calcularChapa(
@@ -94,3 +96,16 @@ object CalculadoraPeso {
 
 
 }
+
+//import java.text.NumberFormat
+//import java.util.Locale
+
+
+//fun Double.format2(): String {
+  //  val formato = NumberFormat.getNumberInstance(Locale("pt", "BR"))
+    //formato.minimumFractionDigits = 2
+    //formato.maximumFractionDigits = 2
+    //return formato.format(this)
+//}
+
+

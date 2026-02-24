@@ -31,9 +31,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.foundation.layout.*
-
-
-
+import com.example.oramenteevendas.utils.format2
+import com.example.oramenteevendas.utils.formatCurrency
 
 
 class MainActivity : ComponentActivity() {
@@ -303,7 +302,8 @@ fun CalculadoraScreen() {
                                     comp,
                                     densidade
                                 )
-                            } else 0.0
+                            }
+                            else 0.0
                         }
 
 
@@ -344,7 +344,6 @@ fun CalculadoraScreen() {
                     val kgPorMetro = peso / comp
 
 
-
                     val descricao = when (tipoPeca) {
                         "Chapa" -> "Chapa ${largura} x ${espessura} - ${comprimento}m"
                         "Tubo Quadrado" -> "Tubo Quadrado ${largura} x ${espessura} - ${comprimento}m"
@@ -359,31 +358,22 @@ fun CalculadoraScreen() {
                         val valorUnitario = peso * preco
                         val valorTotal = pesoTotal * preco
 
-                        """Peso unitário: %.2f kg
-                           Kg/m: %.2f kg/m
-                           Peso total (%d pçs): %.2f kg
-                           Valor total: R$ %.2f
-                                """.trimIndent().format(
-                                peso,
-                                kgPorMetro,
-                                qtd,
-                                pesoTotal,
-                                valorTotal
-                        )
+                        """
+Peso unitário: ${peso.format2()} kg
+Kg/m: ${kgPorMetro.format2()} kg/m
+Peso total ($qtd pçs): ${pesoTotal.format2()} kg
+Valor total: R$ ${valorTotal.format2()}
+    """.trimIndent()
 
                     } else {
 
                         """
-                            Peso unitário: %.2f kg
-                            Kg/m: %.2f kg/m
-                            Peso total (%d pçs): %.2f kg
-                            """.trimIndent().format(
-                            peso,
-                            kgPorMetro,
-                            qtd,
-                            pesoTotal
-                        )
+Peso unitário: ${peso.format2()} kg
+Kg/m: ${kgPorMetro.format2()} kg/m
+Peso total ($qtd pçs): ${pesoTotal.format2()} kg
+    """.trimIndent()
                     }
+
 
                     resultado = textoFinal
 
