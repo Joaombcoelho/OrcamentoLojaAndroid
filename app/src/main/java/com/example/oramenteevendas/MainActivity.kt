@@ -359,15 +359,20 @@ fun CalculadoraScreen() {
                         val valorTotal = pesoTotal * preco
 
                         """
+📐 DADOS TÉCNICOS
 Peso unitário: ${peso.format2()} kg
 Kg/m: ${kgPorMetro.format2()} kg/m
 Peso total ($qtd pçs): ${pesoTotal.format2()} kg
-Valor total: R$ ${valorTotal.format2()}
+
+💰 DADOS COMERCIAIS
+Valor unitário: ${valorUnitario.formatCurrency()}
+Valor total: ${valorTotal.formatCurrency()}
     """.trimIndent()
 
                     } else {
 
                         """
+📐 DADOS TÉCNICOS
 Peso unitário: ${peso.format2()} kg
 Kg/m: ${kgPorMetro.format2()} kg/m
 Peso total ($qtd pçs): ${pesoTotal.format2()} kg
