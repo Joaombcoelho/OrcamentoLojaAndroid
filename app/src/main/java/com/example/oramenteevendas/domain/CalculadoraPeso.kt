@@ -1,6 +1,4 @@
-package com.example.oramenteevendas.utils
-
-
+package com.example.oramenteevendas.domain
 
 object CalculadoraPeso {
 
@@ -95,4 +93,3 @@ object CalculadoraPeso {
     }
 
 }
-

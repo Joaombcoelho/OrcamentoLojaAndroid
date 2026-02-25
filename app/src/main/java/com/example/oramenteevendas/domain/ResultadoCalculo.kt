@@ -1,4 +1,4 @@
-package com.example.oramenteevendas.model
+package com.example.oramenteevendas.domain
 
 
 data class ResultadoCalculo(

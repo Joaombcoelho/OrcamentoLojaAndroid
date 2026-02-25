@@ -6,34 +6,21 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.oramenteevendas.ui.theme.OrçamenteEVendasTheme
-import android.util.Log
-import com.example.oramenteevendas.utils.CalculadoraPeso
+import com.example.oramenteevendas.domain.CalculadoraPeso
 import com.example.oramenteevendas.utils.Densidades
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.*
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
-import androidx.compose.foundation.layout.*
-import com.example.oramenteevendas.utils.format2
-import com.example.oramenteevendas.utils.formatCurrency
-import com.example.oramenteevendas.model.calcular
 
 
 class MainActivity : ComponentActivity() {
