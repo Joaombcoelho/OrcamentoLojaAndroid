@@ -119,15 +119,11 @@ Este projeto faz parte da minha evolução como desenvolvedor Android, aplicando
 
 ## 📸 Screenshots
 
-### Viga U
-![Viga U](screenshots/viga_u.jpg)
-
-### Tubo Retangular
-![Tubo Retangular](screenshots/tubo_retangular.jpg)
-
-### Tubo Redondo
-![Tubo Redondo](screenshots/tubo_redondo.jpg)
-
+<p align="center">
+  <img src="screenshots/viga_u.jpg" width="250"/>
+  <img src="screenshots/tubo_retangular.jpg" width="250"/>
+  <img src="screenshots/tubo_redondo.jpg" width="250"/>
+</p>
 ---
 
 ## 👨‍💻 Autor
