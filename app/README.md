@@ -117,9 +117,16 @@ Este projeto faz parte da minha evolução como desenvolvedor Android, aplicando
 
 ---
 
-## 📸 Em breve
+## 📸 Screenshots
 
-Serão adicionadas imagens do app em funcionamento.
+### Viga U
+![Viga U](screenshots/viga_u.jpg)
+
+### Tubo Retangular
+![Tubo Retangular](screenshots/tubo_retangular.jpg)
+
+### Tubo Redondo
+![Tubo Redondo](screenshots/tubo_redondo.jpg)
 
 ---
 
