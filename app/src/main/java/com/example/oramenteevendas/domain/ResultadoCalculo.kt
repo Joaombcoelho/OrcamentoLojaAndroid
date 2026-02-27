@@ -3,10 +3,8 @@ package com.example.oramenteevendas.domain
 
 data class ResultadoCalculo(
     val pesoUnitario: Double,
-    val kgPorMetro: Double,
     val pesoTotal: Double,
-    val valorUnitario: Double? = null,
-    val valorTotal: Double? = null
+    val valorTotal: Double?
 )
 
 fun calcular(
@@ -16,20 +14,13 @@ fun calcular(
     preco: Double?
 ): ResultadoCalculo {
 
-    val kgPorMetro = if (comprimento != 0.0) {
-        peso / comprimento
-    } else 0.0
-
     val pesoTotal = peso * qtd
 
-    val valorUnitario = preco?.let { peso * it }
     val valorTotal = preco?.let { pesoTotal * it }
 
     return ResultadoCalculo(
         pesoUnitario = peso,
-        kgPorMetro = kgPorMetro,
         pesoTotal = pesoTotal,
-        valorUnitario = valorUnitario,
         valorTotal = valorTotal
     )
 }
