@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.oramenteevendas.ui.screens.CalculadoraScreen
 import com.example.oramenteevendas.ui.theme.OrcamenteEVendasTheme
+import com.example.oramenteevendas.ui.navigation.AppNavigation
 
 class MainActivity : ComponentActivity() {
 
@@ -15,7 +16,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             OrcamenteEVendasTheme {
-                CalculadoraScreen()
+                AppNavigation()
             }
         }
     }

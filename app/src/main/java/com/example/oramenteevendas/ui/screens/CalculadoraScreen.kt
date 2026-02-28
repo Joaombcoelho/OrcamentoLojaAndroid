@@ -34,6 +34,8 @@ import com.example.oramenteevendas.domain.ResultadoCalculo
 import com.example.oramenteevendas.ui.components.ResultadoCard
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 fun String.somenteNumeros(): String {
     return this
@@ -41,7 +43,9 @@ fun String.somenteNumeros(): String {
         .filter { it.isDigit() || it == '.' }
 }
 @Composable
-fun CalculadoraScreen() {
+fun CalculadoraScreen(
+    onNovoResultado: (ResultadoCalculo) -> Unit
+) {
 
     var comprimento by remember { mutableStateOf("") }
     var largura by remember { mutableStateOf("") }
@@ -56,12 +60,13 @@ fun CalculadoraScreen() {
     var historico by remember { mutableStateOf(listOf<ResultadoCalculo>()) }
     var resultado by remember { mutableStateOf<ResultadoCalculo?>(null) }
 
+
     val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .systemBarsPadding()
+            .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
 
@@ -395,7 +400,7 @@ fun CalculadoraScreen() {
                 )
 
                 resultado = novoResultado
-                historico = historico + novoResultado
+                onNovoResultado(novoResultado)
             }
         ) {
             Text("Calcular")
@@ -409,12 +414,6 @@ fun CalculadoraScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Histórico")
-
-        LazyColumn {
-            items(historico.reversed()) { item ->
-                ResultadoCard(resultado = item)
-            }
         }
     }
-}
+
