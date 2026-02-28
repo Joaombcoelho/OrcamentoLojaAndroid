@@ -1,24 +1,23 @@
 pluginManagement {
     repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
+        google()
         mavenCentral()
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
+    // Bloqueia repositórios definidos nos subprojetos
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+
+    // Repositórios padrão para dependências
     repositories {
         google()
         mavenCentral()
     }
 }
 
-rootProject.name = "Orçamente e Vendas"
-include(":app")
- 
+// Nome do projeto principal
+rootProject.name = "OrcamentoEVendas"
+
+// Módulos do projeto

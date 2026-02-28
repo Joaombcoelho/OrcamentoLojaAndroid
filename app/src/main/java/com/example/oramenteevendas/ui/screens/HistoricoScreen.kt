@@ -1,32 +1,46 @@
 package com.example.oramenteevendas.ui.screens
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.oramenteevendas.domain.ResultadoCalculo
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.oramenteevendas.ui.viewmodel.CalculadoraViewModel
 import com.example.oramenteevendas.ui.components.ResultadoCard
 
 @Composable
-fun HistoricoScreen(historico: List<ResultadoCalculo>) {
+fun HistoricoScreen(viewModel: CalculadoraViewModel) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
+    val lista by viewModel.historico.collectAsState(initial = emptyList())
 
-        Text("Histórico")
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Histórico") })
+        }
+    ) { padding ->
 
-        Spacer(modifier = Modifier.height(16.dp))
+        LazyColumn(
+            modifier = Modifier.padding(padding)
+        ) {
+            items(lista) { item ->
 
-        LazyColumn {
-            items(historico.reversed()) { item ->
-                ResultadoCard(resultado = item)
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    Column(modifier = Modifier.padding(8.dp)) {
+                        Text("Comprimento: ${item.comprimento}")
+                        Text("Largura: ${item.largura}")
+                        Text("Valor Unitário: ${item.valorUnitario}")
+                        Text("Resultado: ${item.resultado}")
+                    }
+                }
             }
         }
     }

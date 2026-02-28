@@ -15,9 +15,17 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            OrcamenteEVendasTheme {
-                AppNavigation()
+
+            val context = LocalContext.current
+            val database = remember {
+                AppDatabaseProvider.getDatabase(context)
             }
+
+            val viewModel = remember {
+                CalculadoraViewModel(database.resultadoDao())
+            }
+
+            TelaPrincipal(viewModel)
+        }
         }
     }
-}
