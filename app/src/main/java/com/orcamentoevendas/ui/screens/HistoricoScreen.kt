@@ -20,7 +20,6 @@ import com.orcamentoevendas.utils.PdfExporter
 import java.text.SimpleDateFormat
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoricoScreen(
     viewModel: CalculadoraViewModel,
@@ -38,17 +37,16 @@ fun HistoricoScreen(
             Text("Voltar")
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
         Text(
             "Histórico de Orçamentos",
             style = MaterialTheme.typography.titleLarge
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(Modifier.height(16.dp))
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
@@ -57,7 +55,6 @@ fun HistoricoScreen(
                 OrcamentoCard(orcamento)
 
             }
-
         }
     }
 }
@@ -82,15 +79,8 @@ fun OrcamentoCard(item: OrcamentoEntity) {
         ) {
 
             Text(
-                text = item.tipoPeca,
+                text = "Orçamento",
                 style = MaterialTheme.typography.titleMedium
-            )
-
-            Spacer(Modifier.height(4.dp))
-
-            Text(
-                text = "${item.largura} x ${item.altura} x ${item.espessura} mm",
-                fontSize = 14.sp
             )
 
             Spacer(Modifier.height(8.dp))
