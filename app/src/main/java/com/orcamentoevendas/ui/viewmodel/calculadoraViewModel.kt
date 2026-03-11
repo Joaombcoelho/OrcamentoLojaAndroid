@@ -1,23 +1,25 @@
 package com.orcamentoevendas.ui.viewmodel
 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.orcamentoevendas.data.local.dao.HistoricoDao
-import com.orcamentoevendas.data.local.entity.ResultadoEntity
+import com.orcamentoevendas.data.local.dao.OrcamentoDao
+import com.orcamentoevendas.data.local.entity.OrcamentoEntity
+import com.orcamentoevendas.ui.state.CalculadoraUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import com.orcamentoevendas.ui.state.CalculadoraUiState
+import javax.inject.Inject
 
-
-class CalculadoraViewModel(
-    private val dao: HistoricoDao
+@HiltViewModel
+class CalculadoraViewModel @Inject constructor(
+    private val dao: OrcamentoDao
 ) : ViewModel() {
 
     private val _resultadoAtual = MutableStateFlow<Double?>(null)
 
-    private val historicoFlow = dao.listar()
+    private val historicoFlow: Flow<List<OrcamentoEntity>> =
+        dao.listarHistorico()
 
     val uiState: StateFlow<CalculadoraUiState> =
         combine(_resultadoAtual, historicoFlow) { resultado, historico ->
@@ -31,31 +33,22 @@ class CalculadoraViewModel(
             CalculadoraUiState()
         )
 
-    fun calcularESalvar(
-        pesoTotal: Double,
-        valorTotal: Double
-    ) {
-
+    fun calcularESalvar(pesoTotal: Double, valorTotal: Double) {
         _resultadoAtual.value = pesoTotal
 
         viewModelScope.launch {
-
-            val dataFormatada = LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-
-            val entity = ResultadoEntity(
-                valorTotal = valorTotal,
+            val entity = OrcamentoEntity(
                 pesoTotal = pesoTotal,
-                data = dataFormatada
+                valorTotal = valorTotal,
+                data = System.currentTimeMillis()
             )
-
             dao.inserir(entity)
         }
     }
 
     fun limparHistorico() {
         viewModelScope.launch {
-            dao.limpar()
+            dao.limparHistorico()
         }
     }
 }

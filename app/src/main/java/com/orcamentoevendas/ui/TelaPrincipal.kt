@@ -1,31 +1,22 @@
-package com.orcamentoevendas.ui.screens
+package com.orcamentoevendas.ui
 
 import androidx.compose.runtime.*
 import androidx.compose.material3.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.material3.ExperimentalMaterial3Api
-
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.orcamentoevendas.ui.screens.CalculadoraScreen
 import com.orcamentoevendas.ui.screens.HistoricoScreen
 import com.orcamentoevendas.ui.viewmodel.CalculadoraViewModel
-import com.orcamentoevendas.ui.viewmodel.CalculadoraViewModelFactory
-import com.orcamentoevendas.data.local.AppDatabase
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaPrincipal() {
 
-    val context = LocalContext.current
-    val database = AppDatabase.getDatabase(context)
-    val dao = database.resultadoDao()
+    val viewModel: CalculadoraViewModel = hiltViewModel()
 
-    val factory = CalculadoraViewModelFactory(dao)
-
-    val viewModel: CalculadoraViewModel =
-        viewModel(factory = factory)
+    val uiState by viewModel.uiState.collectAsState()
 
     var telaAtual by remember { mutableStateOf("calculadora") }
 
@@ -34,6 +25,13 @@ fun TelaPrincipal() {
             CenterAlignedTopAppBar(
                 title = { Text("Orçamento e Vendas") }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { telaAtual = "calculadora" }
+            ) {
+                Text("+")
+            }
         }
     ) { paddingValues ->
 
@@ -47,17 +45,20 @@ fun TelaPrincipal() {
 
                 "calculadora" -> CalculadoraScreen(
                     viewModel = viewModel,
-                    onIrParaHistorico = { telaAtual = "historico" }
+                    uiState = uiState,
+                    onIrParaHistorico = {
+                        telaAtual = "historico"
+                    }
                 )
 
                 "historico" -> HistoricoScreen(
                     viewModel = viewModel,
-                    onVoltar = { telaAtual = "calculadora" }
+                    uiState = uiState,
+                    onVoltar = {
+                        telaAtual = "calculadora"
+                    }
                 )
-
             }
-
         }
-
     }
 }

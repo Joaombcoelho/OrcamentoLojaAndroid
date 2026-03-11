@@ -1,23 +1,22 @@
-package com.orcamentoevendas.data.local
+package com.orcamentoevendas.data.local.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.orcamentoevendas.data.local.entity.ResultadoEntity
-import com.orcamentoevendas.data.local.dao.HistoricoDao
+import com.orcamentoevendas.data.local.dao.OrcamentoDao
+import com.orcamentoevendas.data.local.entity.OrcamentoEntity
 
 @Database(
-    entities = [ResultadoEntity::class],
+    entities = [OrcamentoEntity::class],
     version = 1,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun resultadoDao(): HistoricoDao
+    abstract fun orcamentoDao(): OrcamentoDao
 
     companion object {
-
         @Volatile
         private var INSTANCE: AppDatabase? = null
 

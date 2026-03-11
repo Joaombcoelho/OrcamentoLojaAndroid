@@ -1,4 +1,4 @@
-package com.orcamentoevendas.data.local
+package com.orcamentoevendas.data.local.database
 
 import android.content.Context
 import androidx.room.Room

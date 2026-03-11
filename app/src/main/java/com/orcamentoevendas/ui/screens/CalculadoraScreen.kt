@@ -15,6 +15,8 @@ import com.orcamentoevendas.ui.components.ResultadoCard
 import com.orcamentoevendas.utils.Densidades
 import com.orcamentoevendas.ui.viewmodel.CalculadoraViewModel
 import androidx.compose.runtime.collectAsState
+import com.orcamentoevendas.ui.state.CalculadoraUiState
+
 
 fun String.somenteNumeros(): String {
     return this
@@ -25,6 +27,7 @@ fun String.somenteNumeros(): String {
 @Composable
 fun CalculadoraScreen(
     viewModel: CalculadoraViewModel,
+    uiState: CalculadoraUiState,
     onIrParaHistorico: () -> Unit
 ) {
 

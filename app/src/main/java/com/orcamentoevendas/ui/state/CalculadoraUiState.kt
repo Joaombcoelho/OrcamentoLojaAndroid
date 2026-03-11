@@ -1,8 +1,8 @@
 package com.orcamentoevendas.ui.state
 
-import com.orcamentoevendas.data.local.entity.ResultadoEntity
+import com.orcamentoevendas.data.local.entity.OrcamentoEntity
 
 data class CalculadoraUiState(
     val resultadoAtual: Double? = null,
-    val historico: List<ResultadoEntity> = emptyList()
+    val historico: List<OrcamentoEntity> = emptyList()
 )

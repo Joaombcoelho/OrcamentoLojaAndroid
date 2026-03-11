@@ -2,7 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    kotlin("kapt")
+
+    id("dagger.hilt.android.plugin")
     id("org.jetbrains.kotlin.plugin.parcelize")
+
 }
 
 android {
@@ -57,7 +61,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation("com.itextpdf:itext7-core:7.2.5")
-
+    implementation("androidx.compose.material:material-icons-extended")
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -66,6 +70,13 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.51")
+    kapt("com.google.dagger:hilt-android-compiler:2.51")
+
+    // Hilt + Compose
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
 // ViewModel Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
