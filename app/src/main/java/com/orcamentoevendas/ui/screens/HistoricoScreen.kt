@@ -79,21 +79,23 @@ fun OrcamentoCard(item: OrcamentoEntity) {
         ) {
 
             Text(
-                text = "Orçamento",
+                text = item.tipoPeca,
                 style = MaterialTheme.typography.titleMedium
             )
 
+            Spacer(Modifier.height(4.dp))
+
+            Text(item.dimensoes)
+
+            Spacer(Modifier.height(4.dp))
+
+            Text("Comprimento: ${item.comprimento} m")
+
             Spacer(Modifier.height(8.dp))
 
-            Text(
-                text = "Peso total: ${"%.2f".format(item.pesoTotal)} kg",
-                fontSize = 16.sp
-            )
+            Text("Peso total: ${"%.2f".format(item.pesoTotal)} kg")
 
-            Text(
-                text = "Valor total: R$ ${"%.2f".format(item.valorTotal)}",
-                fontSize = 16.sp
-            )
+            Text("Valor total: R$ ${"%.2f".format(item.valorTotal)}")
 
             Spacer(Modifier.height(6.dp))
 
@@ -110,10 +112,7 @@ fun OrcamentoCard(item: OrcamentoEntity) {
                 modifier = Modifier.align(Alignment.End)
             ) {
 
-                Icon(
-                    imageVector = Icons.Default.Share,
-                    contentDescription = "Compartilhar PDF"
-                )
+                Icon(Icons.Default.Share, contentDescription = "PDF")
 
                 Spacer(Modifier.width(6.dp))
 

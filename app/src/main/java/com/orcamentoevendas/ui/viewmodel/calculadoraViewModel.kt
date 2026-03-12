@@ -33,15 +33,22 @@ class CalculadoraViewModel @Inject constructor(
             CalculadoraUiState()
         )
 
-    fun calcularESalvar(pesoTotal: Double, valorTotal: Double) {
-        _resultadoAtual.value = pesoTotal
+    fun calcularESalvar(
+        pesoTotal: Double,
+        valorTotal: Double
+    ) {
 
         viewModelScope.launch {
+
             val entity = OrcamentoEntity(
+                tipoPeca = "Peça",
+                dimensoes = "N/A",
+                comprimento = 0.0,
                 pesoTotal = pesoTotal,
                 valorTotal = valorTotal,
                 data = System.currentTimeMillis()
             )
+
             dao.inserir(entity)
         }
     }

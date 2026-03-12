@@ -2,20 +2,19 @@ package com.orcamentoevendas.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.orcamentoevendas.domain.CalculadoraPeso
 import com.orcamentoevendas.ui.components.ResultadoCard
-import com.orcamentoevendas.utils.Densidades
-import com.orcamentoevendas.ui.viewmodel.CalculadoraViewModel
-import androidx.compose.runtime.collectAsState
 import com.orcamentoevendas.ui.state.CalculadoraUiState
+import com.orcamentoevendas.ui.viewmodel.CalculadoraViewModel
+import com.orcamentoevendas.utils.Densidades
 
 
 fun String.somenteNumeros(): String {
@@ -44,6 +43,7 @@ fun CalculadoraScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val resultado = uiState.resultadoAtual
+
 
     Column(
         modifier = Modifier
@@ -373,14 +373,15 @@ fun CalculadoraScreen(
                     else -> 0.0
                 }
 
-                val preco = precoKg.replace(",", ".").toDoubleOrNull()
-                val valorUnitario = preco ?: 0.0
+                val preco = precoKg.replace(",", ".").toDoubleOrNull() ?: 0.0
 
                 val resultadoFinal = peso * qtd
 
+                val valorTotal = resultadoFinal * preco
+
                 viewModel.calcularESalvar(
                     pesoTotal = resultadoFinal,
-                    valorTotal = resultadoFinal * valorUnitario
+                    valorTotal = valorTotal
                 )
             }
         ) {
@@ -398,6 +399,22 @@ fun CalculadoraScreen(
                 peso = it,
                 valorTotal = valorTotal
             )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
+                onClick = {
+                    viewModel.calcularESalvar(
+                        pesoTotal = it,
+                        valorTotal = valorTotal
+                    )
+                }
+            ) {
+                Text("Salvar no Histórico")
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
