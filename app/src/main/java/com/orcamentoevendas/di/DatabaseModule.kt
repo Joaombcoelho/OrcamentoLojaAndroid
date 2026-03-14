@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.orcamentoevendas.data.local.database.AppDatabase
 import com.orcamentoevendas.data.local.dao.OrcamentoDao
+import com.orcamentoevendas.data.repository.OrcamentoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,5 +32,11 @@ object DatabaseModule {
     @Provides
     fun provideDao(database: AppDatabase): OrcamentoDao {
         return database.orcamentoDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrcamentoRepository(dao: OrcamentoDao): OrcamentoRepository {
+        return OrcamentoRepository(dao)
     }
 }
