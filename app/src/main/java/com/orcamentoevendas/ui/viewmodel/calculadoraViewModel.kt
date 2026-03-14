@@ -20,8 +20,8 @@ class CalculadoraViewModel : ViewModel() {
                 "Salvar histórico -> " +
                         "Peça: $peca " +
                         "Comprimento: $comprimento " +
-                        "Peso: $peso " +
-                        "Valor: $valor"
+                        "Peso: $pesoTotal " +
+                        "Valor: $valorTotal"
             )
 
         }

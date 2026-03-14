@@ -25,6 +25,8 @@ fun TelaPrincipal() {
         )
 
         "historico" -> HistoricoScreen(
+            viewModel = viewModel,
+            uiState = uiState,
             onVoltar = { telaAtual = "calculadora" }
         )
     }
