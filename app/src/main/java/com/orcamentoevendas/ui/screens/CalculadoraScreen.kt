@@ -37,8 +37,6 @@ fun CalculadoraScreen(
     var baseAba by remember { mutableStateOf("") }
     var retorno by remember { mutableStateOf("") }
     var quantidade by remember { mutableStateOf("1") }
-    var resultado by remember { mutableStateOf<Double?>(null) }
-
     val scrollState = rememberScrollState()
 
     Column(
@@ -331,7 +329,7 @@ fun CalculadoraScreen(
                     else -> 0.0
                 }
 
-                resultado = peso * qtd
+                viewModel.atualizarResultado(peso * qtd)
             }
         ) {
             Text("Calcular")
@@ -339,7 +337,7 @@ fun CalculadoraScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        resultado?.let { pesoCalculado ->
+        uiState.resultadoAtual?.let { pesoCalculado ->
 
             val preco = precoKg.replace(",", ".").toDoubleOrNull() ?: 0.0
             val valorTotal = pesoCalculado * preco
