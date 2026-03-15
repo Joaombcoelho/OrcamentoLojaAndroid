@@ -10,21 +10,26 @@ O projeto foi criado com base em necessidades reais de cálculo no dia a dia de 
 
 - Kotlin
 - Jetpack Compose
-- Arquitetura simples (UI + Domain)
-- Gerenciamento de estado com `remember { mutableStateOf() }`
-- LazyColumn para histórico de cálculos
+- Material 3
+- ViewModel + StateFlow
+- Hilt (injeção de dependências)
+- Room (persistência local)
+- Coroutines + Flow
+- Exportação de PDF
 
 ---
 
 ## 🎯 Funcionalidades
 
-O aplicativo calcula:
+O aplicativo já oferece:
 
-- ✅ Peso unitário (kg)
+- ✅ Cálculo de peso por tipo de peça
 - ✅ Kg por metro
 - ✅ Peso total por quantidade
-- ✅ Valor unitário (opcional)
-- ✅ Valor total (opcional)
+- ✅ Cálculo de valor por Kg (opcional)
+- ✅ Salvar orçamento no histórico
+- ✅ Visualizar histórico de orçamentos
+- ✅ Compartilhar orçamento em PDF
 
 ---
 
@@ -43,66 +48,68 @@ O aplicativo calcula:
 
 As regras matemáticas ficam isoladas na camada **domain**, através do objeto:
 
-```
+```kotlin
 CalculadoraPeso
 ```
 
 Ele contém funções específicas para cada tipo de peça:
 
-- calcularChapa()
-- calcularTuboQuadrado()
-- calcularTuboRetangular()
-- calcularVigaU()
-- calcularVigaUEnrijecida()
-- calcularTuboRedondo()
-
-O resultado é retornado através da data class:
-
-```
-ResultadoCalculo
-```
+- `calcularChapa()`
+- `calcularTuboQuadrado()`
+- `calcularTuboRetangular()`
+- `calcularVigaU()`
+- `calcularVigaUEnrijecida()`
+- `calcularTuboRedondo()`
 
 ---
 
 ## 📂 Estrutura do Projeto
 
-```
-com.seuapp
+```text
+com.orcamentoevendas
+│
+├── data/
+│   ├── local/           # Room (DAO, entities, database)
+│   └── repository/      # Repositórios da aplicação
+│
+├── di/                  # Módulos Hilt
+│
+├── domain/              # Regras de cálculo e modelos de domínio
 │
 ├── ui/
-│     └── TelaPrincipal.kt
-│
-├── domain/
-│     ├── CalculadoraPeso.kt
-│     ├── ResultadoCalculo.kt
-│     └── TipoPeca.kt
+│   ├── components/      # Componentes reutilizáveis
+│   ├── screens/         # Telas Compose
+│   ├── state/           # UiState
+│   └── viewmodel/       # ViewModels
 │
 └── MainActivity.kt
 ```
 
-- **ui** → Interface com Jetpack Compose
+- **data** → Persistência local e acesso a dados
+- **di** → Configuração de injeção de dependências
 - **domain** → Regras de negócio e cálculos
-- **model (futuro)** → Estruturas de dados persistentes
+- **ui** → Interface, estado de tela e fluxo de interação
 
 ---
 
 ## 📌 Conversões Importantes
 
 - Conversão de milímetros para metros: `mm / 1000.0`
-- Quantidade padrão = 1 se valor inválido
+- Quantidade padrão = `1` se valor inválido
 - Densidade padrão atual: Aço
 
 ---
 
-## 🛠️ Melhorias Futuras (Roadmap)
+## 🛠️ Roadmap
 
-- [ ] Implementar ViewModel (MVVM)
-- [ ] Persistência de histórico com Room
-- [ ] Melhorar UI com Cards e Material 3
+- [x] Implementar ViewModel (MVVM incremental)
+- [x] Persistência de histórico com Room
+- [x] Melhorar UI com Material 3 e cards de resultado
+- [x] Compartilhar orçamento em PDF
 - [ ] Implementar seleção de material (aço, inox, alumínio)
-- [ ] Compartilhar orçamento
-- [ ] Exportar PDF
-- [ ] Formatação monetária profissional
+- [ ] Melhorar validações e mensagens de erro de entrada
+- [ ] Migrar navegação para `NavHost` (rotas tipadas)
+- [ ] Expandir testes unitários de cálculo e ViewModel
 
 ---
 
@@ -114,18 +121,20 @@ Este projeto faz parte da minha evolução como desenvolvedor Android, aplicando
 - Separação de responsabilidades
 - Organização arquitetural progressiva
 - Boas práticas de commits
+- Evolução incremental com foco em qualidade
 
 ---
 
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="screenshots/viga_u.jpg" width="250"/>
-  <img src="screenshots/tubo_retangular.jpg" width="250"/>
-  <img src="screenshots/tubo_redondo.jpg" width="250"/>
+  <img src="app/screenshots/viga_u.jpg" width="250" alt="Tela de cálculo para Viga U"/>
+  <img src="app/screenshots/tubo_retangular.jpg" width="250" alt="Tela de cálculo para Tubo Retangular"/>
+  <img src="app/screenshots/tubo_redondo.jpg" width="250" alt="Tela de cálculo para Tubo Redondo"/>
 </p>
+
 ---
 
 ## 👨‍💻 Autor
 
-Desenvolvido por João Manoel  
+Desenvolvido por João Manoel.

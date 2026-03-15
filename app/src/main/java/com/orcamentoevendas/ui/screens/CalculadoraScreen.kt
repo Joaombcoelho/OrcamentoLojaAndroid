@@ -1,26 +1,30 @@
 package com.orcamentoevendas.ui.screens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.orcamentoevendas.domain.CalculadoraPeso
 import com.orcamentoevendas.ui.components.ResultadoCard
 import com.orcamentoevendas.ui.state.CalculadoraUiState
 import com.orcamentoevendas.ui.viewmodel.CalculadoraViewModel
-import com.orcamentoevendas.utils.Densidades
-
-fun String.somenteNumeros(): String {
-    return this
-        .replace(",", ".")
-        .filter { it.isDigit() || it == '.' }
-}
 
 @Composable
 fun CalculadoraScreen(
@@ -28,16 +32,6 @@ fun CalculadoraScreen(
     uiState: CalculadoraUiState,
     onIrParaHistorico: () -> Unit
 ) {
-
-    var comprimento by remember { mutableStateOf("") }
-    var largura by remember { mutableStateOf("") }
-    var espessura by remember { mutableStateOf("") }
-    var precoKg by remember { mutableStateOf("") }
-    var tipoPeca by remember { mutableStateOf("Chapa") }
-    var baseAba by remember { mutableStateOf("") }
-    var retorno by remember { mutableStateOf("") }
-    var quantidade by remember { mutableStateOf("1") }
-    var resultado by remember { mutableStateOf<Double?>(null) }
 
     val scrollState = rememberScrollState()
 
@@ -72,16 +66,10 @@ fun CalculadoraScreen(
 
                 linha.forEach { tipo ->
 
-                    val selecionado = tipoPeca == tipo
+                    val selecionado = uiState.tipoPeca == tipo
 
                     Button(
-                        onClick = {
-                            tipoPeca = tipo
-                            largura = ""
-                            espessura = ""
-                            baseAba = ""
-                            retorno = ""
-                        },
+                        onClick = { viewModel.atualizarTipoPeca(tipo) },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -114,20 +102,20 @@ fun CalculadoraScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        when (tipoPeca) {
+        when (uiState.tipoPeca) {
 
             "Chapa" -> {
 
                 OutlinedTextField(
-                    value = largura,
-                    onValueChange = { largura = it.somenteNumeros() },
+                    value = uiState.largura,
+                    onValueChange = viewModel::atualizarLargura,
                     label = { Text("Largura (m)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
                 OutlinedTextField(
-                    value = espessura,
-                    onValueChange = { espessura = it.somenteNumeros() },
+                    value = uiState.espessura,
+                    onValueChange = viewModel::atualizarEspessura,
                     label = { Text("Espessura (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
@@ -136,15 +124,15 @@ fun CalculadoraScreen(
             "Tubo Quadrado" -> {
 
                 OutlinedTextField(
-                    value = largura,
-                    onValueChange = { largura = it.somenteNumeros() },
+                    value = uiState.largura,
+                    onValueChange = viewModel::atualizarLargura,
                     label = { Text("Lado Externo (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
                 OutlinedTextField(
-                    value = espessura,
-                    onValueChange = { espessura = it.somenteNumeros() },
+                    value = uiState.espessura,
+                    onValueChange = viewModel::atualizarEspessura,
                     label = { Text("Espessura (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
@@ -153,22 +141,22 @@ fun CalculadoraScreen(
             "Tubo Retangular" -> {
 
                 OutlinedTextField(
-                    value = largura,
-                    onValueChange = { largura = it.somenteNumeros() },
+                    value = uiState.largura,
+                    onValueChange = viewModel::atualizarLargura,
                     label = { Text("Base (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
                 OutlinedTextField(
-                    value = baseAba,
-                    onValueChange = { baseAba = it.somenteNumeros() },
+                    value = uiState.baseAba,
+                    onValueChange = viewModel::atualizarBaseAba,
                     label = { Text("Altura (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
                 OutlinedTextField(
-                    value = espessura,
-                    onValueChange = { espessura = it.somenteNumeros() },
+                    value = uiState.espessura,
+                    onValueChange = viewModel::atualizarEspessura,
                     label = { Text("Espessura (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
@@ -177,22 +165,22 @@ fun CalculadoraScreen(
             "Viga U" -> {
 
                 OutlinedTextField(
-                    value = largura,
-                    onValueChange = { largura = it.somenteNumeros() },
+                    value = uiState.largura,
+                    onValueChange = viewModel::atualizarLargura,
                     label = { Text("Altura (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
                 OutlinedTextField(
-                    value = baseAba,
-                    onValueChange = { baseAba = it.somenteNumeros() },
+                    value = uiState.baseAba,
+                    onValueChange = viewModel::atualizarBaseAba,
                     label = { Text("Base da Aba (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
                 OutlinedTextField(
-                    value = espessura,
-                    onValueChange = { espessura = it.somenteNumeros() },
+                    value = uiState.espessura,
+                    onValueChange = viewModel::atualizarEspessura,
                     label = { Text("Espessura (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
@@ -201,29 +189,29 @@ fun CalculadoraScreen(
             "Viga U Enrijecida" -> {
 
                 OutlinedTextField(
-                    value = largura,
-                    onValueChange = { largura = it.somenteNumeros() },
+                    value = uiState.largura,
+                    onValueChange = viewModel::atualizarLargura,
                     label = { Text("Altura (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
                 OutlinedTextField(
-                    value = baseAba,
-                    onValueChange = { baseAba = it.somenteNumeros() },
+                    value = uiState.baseAba,
+                    onValueChange = viewModel::atualizarBaseAba,
                     label = { Text("Base da Aba (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
                 OutlinedTextField(
-                    value = retorno,
-                    onValueChange = { retorno = it.somenteNumeros() },
+                    value = uiState.retorno,
+                    onValueChange = viewModel::atualizarRetorno,
                     label = { Text("Retorno (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
                 OutlinedTextField(
-                    value = espessura,
-                    onValueChange = { espessura = it.somenteNumeros() },
+                    value = uiState.espessura,
+                    onValueChange = viewModel::atualizarEspessura,
                     label = { Text("Espessura (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
@@ -232,15 +220,15 @@ fun CalculadoraScreen(
             "Tubo Redondo" -> {
 
                 OutlinedTextField(
-                    value = largura,
-                    onValueChange = { largura = it.somenteNumeros() },
+                    value = uiState.largura,
+                    onValueChange = viewModel::atualizarLargura,
                     label = { Text("Diâmetro (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
                 OutlinedTextField(
-                    value = espessura,
-                    onValueChange = { espessura = it.somenteNumeros() },
+                    value = uiState.espessura,
+                    onValueChange = viewModel::atualizarEspessura,
                     label = { Text("Espessura (mm)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
@@ -250,15 +238,15 @@ fun CalculadoraScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = comprimento,
-            onValueChange = { comprimento = it.somenteNumeros() },
+            value = uiState.comprimento,
+            onValueChange = viewModel::atualizarComprimento,
             label = { Text("Comprimento (m)") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
 
         OutlinedTextField(
-            value = quantidade,
-            onValueChange = { quantidade = it.somenteNumeros() },
+            value = uiState.quantidade,
+            onValueChange = viewModel::atualizarQuantidade,
             label = { Text("Quantidade") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
@@ -266,8 +254,8 @@ fun CalculadoraScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = precoKg,
-            onValueChange = { precoKg = it.somenteNumeros() },
+            value = uiState.precoKg,
+            onValueChange = viewModel::atualizarPrecoKg,
             label = { Text("Preço por Kg (opcional)") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
@@ -275,73 +263,16 @@ fun CalculadoraScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = {
-
-                val comp = comprimento.toDoubleOrNull()
-                val larg = largura.toDoubleOrNull()
-                val espMm = espessura.toDoubleOrNull()
-                val baseMm = baseAba.toDoubleOrNull()
-                val retornoMm = retorno.toDoubleOrNull()
-                val qtd = quantidade.toIntOrNull() ?: 1
-
-                if (comp == null || larg == null || espMm == null) return@Button
-
-                val espM = espMm / 1000.0
-                val densidade = Densidades.ACO
-
-                val peso = when (tipoPeca) {
-
-                    "Chapa" ->
-                        CalculadoraPeso.calcularChapa(comp, larg, espM, densidade)
-
-                    "Tubo Quadrado" -> {
-                        val ladoM = larg / 1000.0
-                        CalculadoraPeso.calcularTuboQuadrado(ladoM, espM, comp, densidade)
-                    }
-
-                    "Tubo Retangular" -> {
-                        if (baseMm == null) return@Button
-                        val baseM = larg / 1000.0
-                        val alturaM = baseMm / 1000.0
-                        CalculadoraPeso.calcularTuboRetangular(baseM, alturaM, espM, comp, densidade)
-                    }
-
-                    "Viga U" -> {
-                        if (baseMm == null) return@Button
-                        val alturaM = larg / 1000.0
-                        val baseM = baseMm / 1000.0
-                        CalculadoraPeso.calcularVigaU(alturaM, baseM, espM, comp, densidade)
-                    }
-
-                    "Viga U Enrijecida" -> {
-                        if (baseMm == null || retornoMm == null) return@Button
-                        val alturaM = larg / 1000.0
-                        val baseM = baseMm / 1000.0
-                        val retornoM = retornoMm / 1000.0
-                        CalculadoraPeso.calcularVigaUEnrijecida(
-                            alturaM, baseM, retornoM, espM, comp, densidade
-                        )
-                    }
-
-                    "Tubo Redondo" -> {
-                        val diametroM = larg / 1000.0
-                        CalculadoraPeso.calcularTuboRedondo(diametroM, espM, comp, densidade)
-                    }
-
-                    else -> 0.0
-                }
-
-                resultado = peso * qtd
-            }
+            onClick = { viewModel.calcularResultado() }
         ) {
             Text("Calcular")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        resultado?.let { pesoCalculado ->
+        uiState.resultadoAtual?.let { pesoCalculado ->
 
-            val preco = precoKg.replace(",", ".").toDoubleOrNull() ?: 0.0
+            val preco = uiState.precoKg.replace(",", ".").toDoubleOrNull() ?: 0.0
             val valorTotal = pesoCalculado * preco
 
             ResultadoCard(
@@ -355,14 +286,7 @@ fun CalculadoraScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 ),
-                onClick = {
-                    viewModel.calcularESalvar(
-                        peca = tipoPeca,
-                        comprimento = comprimento.toDoubleOrNull() ?: 0.0,
-                        pesoTotal = pesoCalculado,
-                        valorTotal = valorTotal
-                    )
-                }
+                onClick = { viewModel.salvarResultadoAtual() }
             ) {
                 Text("Salvar no Histórico")
             }
