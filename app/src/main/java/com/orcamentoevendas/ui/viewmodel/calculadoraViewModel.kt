@@ -124,6 +124,34 @@ class CalculadoraViewModel @Inject constructor(
                     tipoPeca = state.tipoPeca,
                     comprimento = comprimento,
                     dimensoes = montarDimensoes(state),
+
+    private val _uiState = MutableStateFlow(CalculadoraUiState())
+    val uiState = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            repository.listarHistorico().collect { historico ->
+                _uiState.update { it.copy(historico = historico) }
+            }
+        }
+    }
+
+    fun atualizarResultado(resultado: Double) {
+        _uiState.update { it.copy(resultadoAtual = resultado) }
+    }
+
+    fun calcularESalvar(
+        peca: String,
+        comprimento: Double,
+        pesoTotal: Double,
+        valorTotal: Double
+    ) {
+        viewModelScope.launch {
+            repository.inserir(
+                OrcamentoEntity(
+                    tipoPeca = peca,
+                    comprimento = comprimento,
+                    dimensoes = "-",
                     pesoTotal = pesoTotal,
                     valorTotal = valorTotal,
                     data = System.currentTimeMillis()
@@ -143,5 +171,7 @@ class CalculadoraViewModel @Inject constructor(
 
     private fun sanitizarNumero(valor: String): String {
         return valor.replace(",", ".").filter { it.isDigit() || it == '.' }
+    }
+        }
     }
 }

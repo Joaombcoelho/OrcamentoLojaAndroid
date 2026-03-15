@@ -33,6 +33,14 @@ fun CalculadoraScreen(
     onIrParaHistorico: () -> Unit
 ) {
 
+    var comprimento by remember { mutableStateOf("") }
+    var largura by remember { mutableStateOf("") }
+    var espessura by remember { mutableStateOf("") }
+    var precoKg by remember { mutableStateOf("") }
+    var tipoPeca by remember { mutableStateOf("Chapa") }
+    var baseAba by remember { mutableStateOf("") }
+    var retorno by remember { mutableStateOf("") }
+    var quantidade by remember { mutableStateOf("1") }
     val scrollState = rememberScrollState()
 
     Column(
@@ -264,6 +272,64 @@ fun CalculadoraScreen(
 
         Button(
             onClick = { viewModel.calcularResultado() }
+            onClick = {
+
+                val comp = comprimento.toDoubleOrNull()
+                val larg = largura.toDoubleOrNull()
+                val espMm = espessura.toDoubleOrNull()
+                val baseMm = baseAba.toDoubleOrNull()
+                val retornoMm = retorno.toDoubleOrNull()
+                val qtd = quantidade.toIntOrNull() ?: 1
+
+                if (comp == null || larg == null || espMm == null) return@Button
+
+                val espM = espMm / 1000.0
+                val densidade = Densidades.ACO
+
+                val peso = when (tipoPeca) {
+
+                    "Chapa" ->
+                        CalculadoraPeso.calcularChapa(comp, larg, espM, densidade)
+
+                    "Tubo Quadrado" -> {
+                        val ladoM = larg / 1000.0
+                        CalculadoraPeso.calcularTuboQuadrado(ladoM, espM, comp, densidade)
+                    }
+
+                    "Tubo Retangular" -> {
+                        if (baseMm == null) return@Button
+                        val baseM = larg / 1000.0
+                        val alturaM = baseMm / 1000.0
+                        CalculadoraPeso.calcularTuboRetangular(baseM, alturaM, espM, comp, densidade)
+                    }
+
+                    "Viga U" -> {
+                        if (baseMm == null) return@Button
+                        val alturaM = larg / 1000.0
+                        val baseM = baseMm / 1000.0
+                        CalculadoraPeso.calcularVigaU(alturaM, baseM, espM, comp, densidade)
+                    }
+
+                    "Viga U Enrijecida" -> {
+                        if (baseMm == null || retornoMm == null) return@Button
+                        val alturaM = larg / 1000.0
+                        val baseM = baseMm / 1000.0
+                        val retornoM = retornoMm / 1000.0
+                        CalculadoraPeso.calcularVigaUEnrijecida(
+                            alturaM, baseM, retornoM, espM, comp, densidade
+                        )
+                    }
+
+                    "Tubo Redondo" -> {
+                        val diametroM = larg / 1000.0
+                        CalculadoraPeso.calcularTuboRedondo(diametroM, espM, comp, densidade)
+                    }
+
+                    else -> 0.0
+                }
+
+                viewModel.atualizarResultado(peso * qtd)
+            }
         ) {
             Text("Calcular")
         }
