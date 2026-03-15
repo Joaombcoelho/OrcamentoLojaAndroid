@@ -32,15 +32,6 @@ fun CalculadoraScreen(
     uiState: CalculadoraUiState,
     onIrParaHistorico: () -> Unit
 ) {
-
-    var comprimento by remember { mutableStateOf("") }
-    var largura by remember { mutableStateOf("") }
-    var espessura by remember { mutableStateOf("") }
-    var precoKg by remember { mutableStateOf("") }
-    var tipoPeca by remember { mutableStateOf("Chapa") }
-    var baseAba by remember { mutableStateOf("") }
-    var retorno by remember { mutableStateOf("") }
-    var quantidade by remember { mutableStateOf("1") }
     val scrollState = rememberScrollState()
 
     Column(
@@ -49,7 +40,6 @@ fun CalculadoraScreen(
             .verticalScroll(scrollState)
             .padding(16.dp)
     ) {
-
         Text("Calculadora de Peso")
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -66,14 +56,11 @@ fun CalculadoraScreen(
         val linhas = tipos.chunked(2)
 
         linhas.forEach { linha ->
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
                 linha.forEach { tipo ->
-
                     val selecionado = uiState.tipoPeca == tipo
 
                     Button(
@@ -82,20 +69,21 @@ fun CalculadoraScreen(
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor =
-                                if (selecionado)
+                                if (selecionado) {
                                     MaterialTheme.colorScheme.primary
-                                else
+                                } else {
                                     MaterialTheme.colorScheme.surfaceVariant
+                                }
                         )
                     ) {
-
                         Text(
                             text = tipo,
                             color =
-                                if (selecionado)
+                                if (selecionado) {
                                     MaterialTheme.colorScheme.onPrimary
-                                else
+                                } else {
                                     MaterialTheme.colorScheme.onSurfaceVariant
+                                }
                         )
                     }
                 }
@@ -111,9 +99,7 @@ fun CalculadoraScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         when (uiState.tipoPeca) {
-
             "Chapa" -> {
-
                 OutlinedTextField(
                     value = uiState.largura,
                     onValueChange = viewModel::atualizarLargura,
@@ -130,7 +116,6 @@ fun CalculadoraScreen(
             }
 
             "Tubo Quadrado" -> {
-
                 OutlinedTextField(
                     value = uiState.largura,
                     onValueChange = viewModel::atualizarLargura,
@@ -147,7 +132,6 @@ fun CalculadoraScreen(
             }
 
             "Tubo Retangular" -> {
-
                 OutlinedTextField(
                     value = uiState.largura,
                     onValueChange = viewModel::atualizarLargura,
@@ -171,7 +155,6 @@ fun CalculadoraScreen(
             }
 
             "Viga U" -> {
-
                 OutlinedTextField(
                     value = uiState.largura,
                     onValueChange = viewModel::atualizarLargura,
@@ -195,7 +178,6 @@ fun CalculadoraScreen(
             }
 
             "Viga U Enrijecida" -> {
-
                 OutlinedTextField(
                     value = uiState.largura,
                     onValueChange = viewModel::atualizarLargura,
@@ -226,7 +208,6 @@ fun CalculadoraScreen(
             }
 
             "Tubo Redondo" -> {
-
                 OutlinedTextField(
                     value = uiState.largura,
                     onValueChange = viewModel::atualizarLargura,
@@ -270,74 +251,13 @@ fun CalculadoraScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = { viewModel.calcularResultado() }
-
-
-                val comp = comprimento.toDoubleOrNull()
-                val larg = largura.toDoubleOrNull()
-                val espMm = espessura.toDoubleOrNull()
-                val baseMm = baseAba.toDoubleOrNull()
-                val retornoMm = retorno.toDoubleOrNull()
-                val qtd = quantidade.toIntOrNull() ?: 1
-
-                if (comp == null || larg == null || espMm == null) return@Button
-
-                val espM = espMm / 1000.0
-                val densidade = Densidades.ACO
-
-                val peso = when (tipoPeca) {
-
-                    "Chapa" ->
-                        CalculadoraPeso.calcularChapa(comp, larg, espM, densidade)
-
-                    "Tubo Quadrado" -> {
-                        val ladoM = larg / 1000.0
-                        CalculadoraPeso.calcularTuboQuadrado(ladoM, espM, comp, densidade)
-                    }
-
-                    "Tubo Retangular" -> {
-                        if (baseMm == null) return@Button
-                        val baseM = larg / 1000.0
-                        val alturaM = baseMm / 1000.0
-                        CalculadoraPeso.calcularTuboRetangular(baseM, alturaM, espM, comp, densidade)
-                    }
-
-                    "Viga U" -> {
-                        if (baseMm == null) return@Button
-                        val alturaM = larg / 1000.0
-                        val baseM = baseMm / 1000.0
-                        CalculadoraPeso.calcularVigaU(alturaM, baseM, espM, comp, densidade)
-                    }
-
-                    "Viga U Enrijecida" -> {
-                        if (baseMm == null || retornoMm == null) return@Button
-                        val alturaM = larg / 1000.0
-                        val baseM = baseMm / 1000.0
-                        val retornoM = retornoMm / 1000.0
-                        CalculadoraPeso.calcularVigaUEnrijecida(
-                            alturaM, baseM, retornoM, espM, comp, densidade
-                        )
-                    }
-
-                    "Tubo Redondo" -> {
-                        val diametroM = larg / 1000.0
-                        CalculadoraPeso.calcularTuboRedondo(diametroM, espM, comp, densidade)
-                    }
-
-                    else -> 0.0
-                }
-
-                viewModel.atualizarResultado(peso * qtd)
-            }
-         {
+        Button(onClick = { viewModel.calcularResultado() }) {
             Text("Calcular")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         uiState.resultadoAtual?.let { pesoCalculado ->
-
             val preco = uiState.precoKg.replace(",", ".").toDoubleOrNull() ?: 0.0
             val valorTotal = pesoCalculado * preco
 
@@ -360,11 +280,10 @@ fun CalculadoraScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = { onIrParaHistorico() }
-        ) {
+        Button(onClick = { onIrParaHistorico() }) {
             Text("Ver Histórico")
         }
 
         Spacer(modifier = Modifier.height(24.dp))
     }
+}
