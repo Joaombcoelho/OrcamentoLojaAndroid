@@ -272,7 +272,7 @@ fun CalculadoraScreen(
 
         Button(
             onClick = { viewModel.calcularResultado() }
-            onClick = {
+
 
                 val comp = comprimento.toDoubleOrNull()
                 val larg = largura.toDoubleOrNull()
@@ -330,7 +330,7 @@ fun CalculadoraScreen(
 
                 viewModel.atualizarResultado(peso * qtd)
             }
-        ) {
+         {
             Text("Calcular")
         }
 
@@ -368,4 +368,3 @@ fun CalculadoraScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
     }
-}
