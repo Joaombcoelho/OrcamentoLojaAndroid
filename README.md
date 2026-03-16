@@ -131,6 +131,13 @@ Esses testes reduzem regressões e complementam a validação prática no dispos
 
 ## ➡️ Próximo Passo Sugerido
 
+Com material, validações, testes iniciais e navegação via `NavHost` implementados, o próximo passo recomendado é **fortalecer testes instrumentados e fluxo de navegação**:
+
+1. Adicionar testes instrumentados para navegação entre `Calculadora` e `Histórico`
+2. Validar cenários de erro na UI (mensagem de validação visível em tela)
+3. Cobrir fluxo de salvar e compartilhar orçamento no histórico
+
+Isso aumenta a confiabilidade ponta a ponta do app em cenários reais de uso.
 Com material, validações e testes iniciais implementados, o próximo passo recomendado é a **migração da navegação para `NavHost` com rotas tipadas**:
 
 1. Definir destinos tipados para `Calculadora` e `Histórico`
@@ -174,6 +181,7 @@ Isso reduz regressões futuras e mantém a velocidade de evolução mesmo com m�
 - [x] Compartilhar orçamento em PDF
 - [x] Implementar seleção de material (aço, inox, alumínio)
 - [x] Melhorar validações e mensagens de erro de entrada
+- [x] Migrar navegação para `NavHost` (rotas tipadas)
 - [ ] Migrar navegação para `NavHost` (rotas tipadas)
 - [x] Expandir testes unitários de cálculo e ViewModel
 
