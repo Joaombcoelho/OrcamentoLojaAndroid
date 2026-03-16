@@ -1,17 +1,13 @@
-package com.example.oramenteevendas
+package com.orcamentoevendas
 
+import com.orcamentoevendas.domain.CalculadoraPeso
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
-import org.junit.Assert.*
-
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun calculadoraPeso_smokeTest() {
+        val resultado = CalculadoraPeso.calcularChapa(1.0, 1.0, 0.001, 7850.0)
+        assertTrue(resultado > 0)
     }
 }

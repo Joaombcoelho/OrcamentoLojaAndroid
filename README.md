@@ -30,6 +30,9 @@ O aplicativo já oferece:
 - ✅ Salvar orçamento no histórico
 - ✅ Visualizar histórico de orçamentos
 - ✅ Compartilhar orçamento em PDF
+- ✅ Seleção de material (Aço, Inox, Alumínio)
+- ✅ Validações de entrada com mensagens de erro
+- ✅ Suíte inicial de testes unitários (domain + ViewModel)
 
 ---
 
@@ -96,7 +99,45 @@ com.orcamentoevendas
 
 - Conversão de milímetros para metros: `mm / 1000.0`
 - Quantidade padrão = `1` se valor inválido
-- Densidade padrão atual: Aço
+- Densidades disponíveis: Aço, Inox e Alumínio
+
+---
+
+
+## ✅ Validação Atual
+
+A validação principal do app está sendo feita em **dispositivo Android real**, com foco em uso prático:
+
+- Compilação e instalação do APK no aparelho
+- Execução dos fluxos principais sem falhas
+- Conferência dos cálculos com cenários reais de uso
+
+> Observação: a estratégia de validação atual combina **teste prático em dispositivo real** com **testes unitários no projeto** para proteger regras de cálculo e comportamento do ViewModel.
+
+---
+
+
+## 🧪 Testes Automatizados
+
+Atualmente o projeto possui uma base inicial de testes cobrindo regras essenciais:
+
+- `CalculadoraPesoTest`: valida fórmulas e casos de borda da camada de domínio
+- `CalculadoraViewModelTest`: valida cálculo por material, mensagens de erro e persistência
+- `MainDispatcherRule`: suporte para testes de corrotinas com `viewModelScope`
+
+Esses testes reduzem regressões e complementam a validação prática no dispositivo Android.
+
+---
+
+## ➡️ Próximo Passo Sugerido
+
+Com material, validações, testes iniciais e navegação via `NavHost` implementados, o próximo passo recomendado é **fortalecer testes instrumentados e fluxo de navegação**:
+
+1. Adicionar testes instrumentados para navegação entre `Calculadora` e `Histórico`
+2. Validar cenários de erro na UI (mensagem de validação visível em tela)
+3. Cobrir fluxo de salvar e compartilhar orçamento no histórico
+
+Isso aumenta a confiabilidade ponta a ponta do app em cenários reais de uso.
 
 ---
 
@@ -106,10 +147,10 @@ com.orcamentoevendas
 - [x] Persistência de histórico com Room
 - [x] Melhorar UI com Material 3 e cards de resultado
 - [x] Compartilhar orçamento em PDF
-- [ ] Implementar seleção de material (aço, inox, alumínio)
-- [ ] Melhorar validações e mensagens de erro de entrada
-- [ ] Migrar navegação para `NavHost` (rotas tipadas)
-- [ ] Expandir testes unitários de cálculo e ViewModel
+- [x] Implementar seleção de material (aço, inox, alumínio)
+- [x] Melhorar validações e mensagens de erro de entrada
+- [x] Migrar navegação para `NavHost` (rotas tipadas)
+- [x] Expandir testes unitários de cálculo e ViewModel
 
 ---
 
