@@ -1,42 +1,30 @@
-# 📱 Calculadora de Peso de Materiais Metálicos
+# 📱 Orçamento e Vendas (Android)
 
-Aplicativo Android desenvolvido em **Kotlin** com **Jetpack Compose** para cálculo de peso e valor de peças metálicas utilizadas na indústria metalúrgica.
+Aplicativo Android para cálculo de peso de peças metálicas, simulação de valor por kg, histórico de orçamentos e exportação em PDF.
 
-O projeto foi criado com base em necessidades reais de cálculo no dia a dia de oficina/serralheria, permitindo calcular peso unitário, peso por metro e valor total de diferentes perfis metálicos.
+## ✅ Stack atual
 
----
+- **Kotlin 1.9.24**
+- **Android Gradle Plugin 8.4.1**
+- **Jetpack Compose + Material 3**
+- **MVVM com ViewModel + StateFlow**
+- **Hilt** (injeção de dependência)
+- **Room** (persistência local)
+- **Coroutines + Flow**
+- **Navigation Compose**
+- **iText 7** (geração de PDF)
 
-## 🚀 Tecnologias Utilizadas
+## 🎯 Funcionalidades implementadas
 
-- Kotlin
-- Jetpack Compose
-- Material 3
-- ViewModel + StateFlow
-- Hilt (injeção de dependências)
-- Room (persistência local)
-- Coroutines + Flow
-- Exportação de PDF
+- Cálculo de peso para múltiplos tipos de peça
+- Cálculo de peso total por quantidade
+- Cálculo de valor total com preço/kg
+- Seleção de material (Aço, Inox, Alumínio)
+- Histórico local de orçamentos
+- Exportação/compartilhamento de orçamento em PDF
+- Validações de entrada no fluxo de cálculo
 
----
-
-## 🎯 Funcionalidades
-
-O aplicativo já oferece:
-
-- ✅ Cálculo de peso por tipo de peça
-- ✅ Kg por metro
-- ✅ Peso total por quantidade
-- ✅ Cálculo de valor por Kg (opcional)
-- ✅ Salvar orçamento no histórico
-- ✅ Visualizar histórico de orçamentos
-- ✅ Compartilhar orçamento em PDF
-- ✅ Seleção de material (Aço, Inox, Alumínio)
-- ✅ Validações de entrada com mensagens de erro
-- ✅ Suíte inicial de testes unitários (domain + ViewModel)
-
----
-
-## 🧱 Tipos de Peças Suportadas
+## 🧱 Tipos de peça suportados
 
 - Chapa
 - Tubo Quadrado
@@ -45,151 +33,137 @@ O aplicativo já oferece:
 - Viga U Enrijecida
 - Tubo Redondo
 
----
+## 📂 Estrutura atual do projeto
 
-## 🧮 Estrutura de Cálculo
-
-As regras matemáticas ficam isoladas na camada **domain**, através do objeto:
-
-```kotlin
-CalculadoraPeso
-```
-
-Ele contém funções específicas para cada tipo de peça:
-
-- `calcularChapa()`
-- `calcularTuboQuadrado()`
-- `calcularTuboRetangular()`
-- `calcularVigaU()`
-- `calcularVigaUEnrijecida()`
-- `calcularTuboRedondo()`
-
----
-
-## 📂 Estrutura do Projeto
+### Raiz
 
 ```text
-com.orcamentoevendas
-│
-├── data/
-│   ├── local/           # Room (DAO, entities, database)
-│   └── repository/      # Repositórios da aplicação
-│
-├── di/                  # Módulos Hilt
-│
-├── domain/              # Regras de cálculo e modelos de domínio
-│
-├── ui/
-│   ├── components/      # Componentes reutilizáveis
-│   ├── screens/         # Telas Compose
-│   ├── state/           # UiState
-│   └── viewmodel/       # ViewModels
-│
-└── MainActivity.kt
+.
+├── app/
+├── gradle/
+├── build.gradle.kts
+├── settings.gradle.kts
+├── gradle.properties
+├── gradlew
+└── gradlew.bat
 ```
 
-- **data** → Persistência local e acesso a dados
-- **di** → Configuração de injeção de dependências
-- **domain** → Regras de negócio e cálculos
-- **ui** → Interface, estado de tela e fluxo de interação
+### Módulo `app`
 
----
+```text
+app/
+├── build.gradle.kts
+├── proguard-rules.pro
+└── src/
+    ├── main/
+    │   ├── AndroidManifest.xml
+    │   ├── java/com/orcamentoevendas/
+    │   │   ├── App.kt
+    │   │   ├── MainActivity.kt
+    │   │   ├── data/
+    │   │   │   ├── local/
+    │   │   │   │   ├── dao/
+    │   │   │   │   ├── database/
+    │   │   │   │   ├── entity/
+    │   │   │   │   └── relation/
+    │   │   │   └── repository/
+    │   │   ├── di/
+    │   │   ├── domain/
+    │   │   │   └── model/
+    │   │   ├── model/
+    │   │   ├── ui/
+    │   │   │   ├── components/
+    │   │   │   ├── navigation/
+    │   │   │   ├── screens/
+    │   │   │   ├── state/
+    │   │   │   ├── theme/
+    │   │   │   └── viewmodel/
+    │   │   └── utils/
+    │   └── res/
+    │       ├── drawable/
+    │       ├── mipmap-*/
+    │       ├── values/
+    │       └── xml/
+    ├── test/
+    │   └── java/com/orcamentoevendas/
+    │       ├── domain/
+    │       ├── ui/viewmodel/
+    │       └── testutils/
+    └── androidTest/
+        └── java/com/example/oramenteevendas/
+```
 
-## 📌 Conversões Importantes
+## 🧠 Papel de cada camada
 
-- Conversão de milímetros para metros: `mm / 1000.0`
-- Quantidade padrão = `1` se valor inválido
-- Densidades disponíveis: Aço, Inox e Alumínio
+- **data/local**: banco Room (`dao`, `entity`, `database`) e relações.
+- **data/repository**: acesso aos dados para o restante do app.
+- **di**: módulos de injeção com Hilt.
+- **domain**: regras de negócio e cálculo (ex.: `CalculadoraPeso`).
+- **ui**: telas Compose, componentes, estado e ViewModels.
+- **utils**: utilitários como formatadores e exportação de PDF.
 
----
+## ▶️ Como executar o projeto
 
+### Pré-requisitos
 
-## ✅ Validação Atual
+- **Android Studio Hedgehog ou superior**
+- **JDK 17**
+- Android SDK instalado (compileSdk/targetSdk **34**)
+- Emulador Android ou dispositivo físico (minSdk **24**)
 
-A validação principal do app está sendo feita em **dispositivo Android real**, com foco em uso prático:
+### 1) Clonar o repositório
 
-- Compilação e instalação do APK no aparelho
-- Execução dos fluxos principais sem falhas
-- Conferência dos cálculos com cenários reais de uso
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd OrcamentoLojaAndroid
+```
 
-> Observação: a estratégia de validação atual combina **teste prático em dispositivo real** com **testes unitários no projeto** para proteger regras de cálculo e comportamento do ViewModel.
+### 2) Abrir no Android Studio
 
----
+1. Abra o Android Studio
+2. Clique em **Open** e selecione a pasta do projeto
+3. Aguarde o **Gradle Sync** terminar
 
+### 3) Executar o app
 
-## 🧪 Testes Automatizados
+1. Selecione o device (emulador ou celular via USB)
+2. Clique em **Run 'app'**
 
-Atualmente o projeto possui uma base inicial de testes cobrindo regras essenciais:
+### 4) Executar via terminal (opcional)
 
-- `CalculadoraPesoTest`: valida fórmulas e casos de borda da camada de domínio
-- `CalculadoraViewModelTest`: valida cálculo por material, mensagens de erro e persistência
-- `MainDispatcherRule`: suporte para testes de corrotinas com `viewModelScope`
+> No Linux/macOS:
 
-Esses testes reduzem regressões e complementam a validação prática no dispositivo Android.
+```bash
+chmod +x gradlew
+./gradlew :app:installDebug
+```
 
----
+> No Windows (PowerShell/CMD):
 
-## ➡️ Próximo Passo Sugerido
+```bash
+gradlew.bat :app:installDebug
+```
 
-Com material, validações e testes iniciais implementados, o próximo passo recomendado é a **migração da navegação para `NavHost` com rotas tipadas**:
+## 🧪 Testes
 
-1. Definir destinos tipados para `Calculadora` e `Histórico`
-2. Centralizar argumentos/rotas em um único arquivo de navegação
-3. Cobrir fluxo de navegação com testes instrumentados básicos
+Testes unitários disponíveis em `app/src/test` (incluindo domínio e ViewModel):
 
-Isso reduz erros de rota, melhora manutenção e prepara o app para novas telas.
+```bash
+./gradlew :app:testDebugUnitTest
+```
 
----
+Testes instrumentados (device/emulador conectado):
 
+```bash
+./gradlew :app:connectedDebugAndroidTest
+```
 
-## ✅ Validação Atual
+## 🛠️ Build útil no dia a dia
 
-A validação principal do app está sendo feita em **dispositivo Android real**, com foco em uso prático:
+```bash
+./gradlew :app:assembleDebug
+```
 
-- Compilação e instalação do APK no aparelho
-- Execução dos fluxos principais sem falhas
-- Conferência dos cálculos com cenários reais de uso
-
-> Observação: devido à limitação de hardware local (PC i3), os testes automatizados no computador foram temporariamente postergados. A estratégia atual prioriza validação funcional em dispositivo real.
-
----
-
-## ➡️ Próximo Passo Sugerido
-
-Com a validação prática já estável, o próximo passo recomendado é criar uma **suíte mínima de testes automatizados** para proteger a lógica do app sem pesar no seu fluxo:
-
-1. Testes unitários de `CalculadoraPeso` (fórmulas por tipo de peça)
-2. Testes do `CalculadoraViewModel` (entrada, cálculo e salvamento)
-3. Remover os testes de exemplo padrão (`2 + 2`) e substituir por cenários reais
-
-Isso reduz regressões futuras e mantém a velocidade de evolução mesmo com máquina mais simples.
-
----
-
-## 🛠️ Roadmap
-
-- [x] Implementar ViewModel (MVVM incremental)
-- [x] Persistência de histórico com Room
-- [x] Melhorar UI com Material 3 e cards de resultado
-- [x] Compartilhar orçamento em PDF
-- [x] Implementar seleção de material (aço, inox, alumínio)
-- [x] Melhorar validações e mensagens de erro de entrada
-- [ ] Migrar navegação para `NavHost` (rotas tipadas)
-- [x] Expandir testes unitários de cálculo e ViewModel
-
----
-
-## 🧠 Objetivo do Projeto
-
-Este projeto faz parte da minha evolução como desenvolvedor Android, aplicando:
-
-- Modelagem de domínio
-- Separação de responsabilidades
-- Organização arquitetural progressiva
-- Boas práticas de commits
-- Evolução incremental com foco em qualidade
-
----
 
 ## 📸 Screenshots
 
@@ -199,8 +173,6 @@ Este projeto faz parte da minha evolução como desenvolvedor Android, aplicando
   <img src="app/screenshots/tubo_redondo.jpg" width="250" alt="Tela de cálculo para Tubo Redondo"/>
 </p>
 
----
-
 ## 👨‍💻 Autor
 
-Desenvolvido por João Manoel.
+Desenvolvido por **João Manoel**.
