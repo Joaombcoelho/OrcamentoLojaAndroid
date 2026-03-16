@@ -141,6 +141,31 @@ Isso reduz erros de rota, melhora manutenção e prepara o app para novas telas.
 
 ---
 
+
+## ✅ Validação Atual
+
+A validação principal do app está sendo feita em **dispositivo Android real**, com foco em uso prático:
+
+- Compilação e instalação do APK no aparelho
+- Execução dos fluxos principais sem falhas
+- Conferência dos cálculos com cenários reais de uso
+
+> Observação: devido à limitação de hardware local (PC i3), os testes automatizados no computador foram temporariamente postergados. A estratégia atual prioriza validação funcional em dispositivo real.
+
+---
+
+## ➡️ Próximo Passo Sugerido
+
+Com a validação prática já estável, o próximo passo recomendado é criar uma **suíte mínima de testes automatizados** para proteger a lógica do app sem pesar no seu fluxo:
+
+1. Testes unitários de `CalculadoraPeso` (fórmulas por tipo de peça)
+2. Testes do `CalculadoraViewModel` (entrada, cálculo e salvamento)
+3. Remover os testes de exemplo padrão (`2 + 2`) e substituir por cenários reais
+
+Isso reduz regressões futuras e mantém a velocidade de evolução mesmo com máquina mais simples.
+
+---
+
 ## 🛠️ Roadmap
 
 - [x] Implementar ViewModel (MVVM incremental)
