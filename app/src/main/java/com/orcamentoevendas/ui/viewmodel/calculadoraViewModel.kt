@@ -154,6 +154,7 @@ class CalculadoraViewModel @Inject constructor(
         return buildString {
             append("Material: ${state.material}")
             append(" | Largura: ${state.largura}")
+            append("Largura: ${state.largura}")
             if (state.baseAba.isNotBlank()) append(" | Base/Aba: ${state.baseAba}")
             if (state.retorno.isNotBlank()) append(" | Retorno: ${state.retorno}")
             append(" | Espessura: ${state.espessura}")
@@ -170,6 +171,22 @@ class CalculadoraViewModel @Inject constructor(
 
     private fun atualizarErro(mensagem: String) {
         _uiState.update { it.copy(mensagemErro = mensagem) }
+
+    private fun densidadePorMaterial(material: String): Double {
+        return when (material) {
+            "Inox" -> Densidades.INOX
+            "Alumínio" -> Densidades.ALUMINIO
+            else -> Densidades.ACO
+        }
+    }
+
+    private fun atualizarErro(mensagem: String) {
+        _uiState.update { it.copy(mensagemErro = mensagem) }
+    }
+
+    private fun sanitizarNumero(valor: String): String {
+        return valor.replace(",", ".").filter { it.isDigit() || it == '.' }
+    }
     }
 
     private fun sanitizarNumero(valor: String): String {
