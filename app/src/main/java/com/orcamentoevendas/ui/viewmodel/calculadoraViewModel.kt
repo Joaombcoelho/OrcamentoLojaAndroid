@@ -57,26 +57,36 @@ class CalculadoraViewModel @Inject constructor(
         val state = _uiState.value
 
         val comp = state.comprimento.toDoubleOrNull()
+            ?: return atualizarErro("Informe um comprimento válido (m).")
+        if (comp <= 0) return atualizarErro("Informe um comprimento válido (m).")
+
         val larg = state.largura.toDoubleOrNull()
+            ?: return atualizarErro("Informe uma medida de largura/base/diâmetro válida.")
+        if (larg <= 0) return atualizarErro("Informe uma medida de largura/base/diâmetro válida.")
+
         val espMm = state.espessura.toDoubleOrNull()
+            ?: return atualizarErro("Informe uma espessura válida (mm).")
+        if (espMm <= 0) return atualizarErro("Informe uma espessura válida (mm).")
+
+        val qtd = state.quantidade.toIntOrNull() ?: 1
+        if (qtd <= 0) return atualizarErro("A quantidade deve ser maior que zero.")
+
         val baseMm = state.baseAba.toDoubleOrNull()
         val retornoMm = state.retorno.toDoubleOrNull()
-        val qtd = state.quantidade.toIntOrNull() ?: 1
 
         when {
-            comp == null || comp <= 0 -> return atualizarErro("Informe um comprimento válido (m).")
-            larg == null || larg <= 0 -> return atualizarErro("Informe uma medida de largura/base/diâmetro válida.")
-            espMm == null || espMm <= 0 -> return atualizarErro("Informe uma espessura válida (mm).")
-            qtd <= 0 -> return atualizarErro("A quantidade deve ser maior que zero.")
             state.tipoPeca == "Tubo Retangular" && (baseMm == null || baseMm <= 0) -> {
                 return atualizarErro("Informe a altura do Tubo Retangular.")
             }
+
             state.tipoPeca == "Viga U" && (baseMm == null || baseMm <= 0) -> {
                 return atualizarErro("Informe a base da aba da Viga U.")
             }
+
             state.tipoPeca == "Viga U Enrijecida" && (baseMm == null || baseMm <= 0) -> {
                 return atualizarErro("Informe a base da aba da Viga U Enrijecida.")
             }
+
             state.tipoPeca == "Viga U Enrijecida" && (retornoMm == null || retornoMm <= 0) -> {
                 return atualizarErro("Informe o retorno da Viga U Enrijecida.")
             }
@@ -154,7 +164,6 @@ class CalculadoraViewModel @Inject constructor(
         return buildString {
             append("Material: ${state.material}")
             append(" | Largura: ${state.largura}")
-            append("Largura: ${state.largura}")
             if (state.baseAba.isNotBlank()) append(" | Base/Aba: ${state.baseAba}")
             if (state.retorno.isNotBlank()) append(" | Retorno: ${state.retorno}")
             append(" | Espessura: ${state.espessura}")
@@ -182,11 +191,6 @@ class CalculadoraViewModel @Inject constructor(
 
     private fun atualizarErro(mensagem: String) {
         _uiState.update { it.copy(mensagemErro = mensagem) }
-    }
-
-    private fun sanitizarNumero(valor: String): String {
-        return valor.replace(",", ".").filter { it.isDigit() || it == '.' }
-    }
     }
 
     private fun sanitizarNumero(valor: String): String {
