@@ -45,6 +45,38 @@ fun CalculadoraScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        val materiais = listOf("Aço", "Inox", "Alumínio")
+
+        Text("Material", style = MaterialTheme.typography.titleSmall)
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            materiais.forEach { material ->
+                val selecionado = uiState.material == material
+                Button(
+                    onClick = { viewModel.atualizarMaterial(material) },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor =
+                            if (selecionado) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Text(
+                        material,
+                        color =
+                            if (selecionado) MaterialTheme.colorScheme.onPrimary
+                            else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         val tipos = listOf(
             "Chapa",
             "Tubo Quadrado",
@@ -249,6 +281,15 @@ fun CalculadoraScreen(
             label = { Text("Preço por Kg (opcional)") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
+
+        uiState.mensagemErro?.let { erro ->
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = erro,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 

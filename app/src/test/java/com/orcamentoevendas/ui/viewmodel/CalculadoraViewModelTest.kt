@@ -11,6 +11,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -27,6 +28,7 @@ class CalculadoraViewModelTest {
         val viewModel = CalculadoraViewModel(repository)
 
         viewModel.atualizarTipoPeca("Chapa")
+        viewModel.atualizarMaterial("Aço")
         viewModel.atualizarComprimento("2")
         viewModel.atualizarLargura("1")
         viewModel.atualizarEspessura("10")
@@ -40,12 +42,54 @@ class CalculadoraViewModelTest {
     }
 
     @Test
+    fun calcularResultado_quandoMudaMaterial_alteraResultado() = runTest {
+        val dao = FakeOrcamentoDao()
+        val repository = OrcamentoRepository(dao)
+        val viewModel = CalculadoraViewModel(repository)
+
+        viewModel.atualizarTipoPeca("Chapa")
+        viewModel.atualizarComprimento("2")
+        viewModel.atualizarLargura("1")
+        viewModel.atualizarEspessura("10")
+        viewModel.atualizarQuantidade("1")
+
+        viewModel.atualizarMaterial("Aço")
+        viewModel.calcularResultado()
+        val resultadoAco = viewModel.uiState.value.resultadoAtual!!
+
+        viewModel.atualizarMaterial("Alumínio")
+        viewModel.calcularResultado()
+        val resultadoAluminio = viewModel.uiState.value.resultadoAtual!!
+
+        assertTrue(resultadoAco > resultadoAluminio)
+        assertEquals(157.0, resultadoAco, 0.0001)
+        assertEquals(54.0, resultadoAluminio, 0.0001)
+    }
+
+    @Test
+    fun calcularResultado_tuboRetangularSemAltura_exibeErro() = runTest {
+        val dao = FakeOrcamentoDao()
+        val repository = OrcamentoRepository(dao)
+        val viewModel = CalculadoraViewModel(repository)
+
+        viewModel.atualizarTipoPeca("Tubo Retangular")
+        viewModel.atualizarComprimento("2")
+        viewModel.atualizarLargura("100")
+        viewModel.atualizarEspessura("2")
+
+        viewModel.calcularResultado()
+
+        assertEquals("Informe a altura do Tubo Retangular.", viewModel.uiState.value.mensagemErro)
+    }
+
+    @Test
     fun salvarResultadoAtual_insereOrcamentoComTotais() = runTest {
         val dao = FakeOrcamentoDao()
         val repository = OrcamentoRepository(dao)
         val viewModel = CalculadoraViewModel(repository)
 
         viewModel.atualizarTipoPeca("Chapa")
+        viewModel.atualizarMaterial("Aço")
         viewModel.atualizarComprimento("2")
         viewModel.atualizarLargura("1")
         viewModel.atualizarEspessura("10")
@@ -61,6 +105,7 @@ class CalculadoraViewModelTest {
         assertEquals("Chapa", salvo.tipoPeca)
         assertEquals(157.0, salvo.pesoTotal, 0.0001)
         assertEquals(314.0, salvo.valorTotal, 0.0001)
+        assertTrue(salvo.dimensoes.contains("Material: Aço"))
     }
 
     private class FakeOrcamentoDao : OrcamentoDao {
