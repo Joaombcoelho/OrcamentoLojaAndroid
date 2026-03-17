@@ -180,9 +180,19 @@ class CalculadoraViewModel @Inject constructor(
 
     private fun atualizarErro(mensagem: String) {
         _uiState.update { it.copy(mensagemErro = mensagem) }
-    }
 
 }
+    private fun densidadePorMaterial(material: String): Double {
+        return when (material) {
+            "Inox" -> Densidades.INOX
+            "Alumínio" -> Densidades.ALUMINIO
+            else -> Densidades.ACO
+        }
+    }
+
+    private fun atualizarErro(mensagem: String) {
+        _uiState.update { it.copy(mensagemErro = mensagem) }
+    }
 
 private fun String.sanitizarNumeroInput(): String {
     return replace(",", ".").filter { it.isDigit() || it == '.' }
