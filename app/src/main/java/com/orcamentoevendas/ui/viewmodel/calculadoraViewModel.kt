@@ -45,13 +45,13 @@ class CalculadoraViewModel @Inject constructor(
     }
 
     fun atualizarMaterial(material: String) = _uiState.update { it.copy(material = material, mensagemErro = null) }
-    fun atualizarComprimento(valor: String) = _uiState.update { it.copy(comprimento = sanitizarNumero(valor), mensagemErro = null) }
-    fun atualizarLargura(valor: String) = _uiState.update { it.copy(largura = sanitizarNumero(valor), mensagemErro = null) }
-    fun atualizarEspessura(valor: String) = _uiState.update { it.copy(espessura = sanitizarNumero(valor), mensagemErro = null) }
-    fun atualizarPrecoKg(valor: String) = _uiState.update { it.copy(precoKg = sanitizarNumero(valor), mensagemErro = null) }
-    fun atualizarBaseAba(valor: String) = _uiState.update { it.copy(baseAba = sanitizarNumero(valor), mensagemErro = null) }
-    fun atualizarRetorno(valor: String) = _uiState.update { it.copy(retorno = sanitizarNumero(valor), mensagemErro = null) }
-    fun atualizarQuantidade(valor: String) = _uiState.update { it.copy(quantidade = sanitizarNumero(valor), mensagemErro = null) }
+    fun atualizarComprimento(valor: String) = _uiState.update { it.copy(comprimento = valor.sanitizarNumeroInput(), mensagemErro = null) }
+    fun atualizarLargura(valor: String) = _uiState.update { it.copy(largura = valor.sanitizarNumeroInput(), mensagemErro = null) }
+    fun atualizarEspessura(valor: String) = _uiState.update { it.copy(espessura = valor.sanitizarNumeroInput(), mensagemErro = null) }
+    fun atualizarPrecoKg(valor: String) = _uiState.update { it.copy(precoKg = valor.sanitizarNumeroInput(), mensagemErro = null) }
+    fun atualizarBaseAba(valor: String) = _uiState.update { it.copy(baseAba = valor.sanitizarNumeroInput(), mensagemErro = null) }
+    fun atualizarRetorno(valor: String) = _uiState.update { it.copy(retorno = valor.sanitizarNumeroInput(), mensagemErro = null) }
+    fun atualizarQuantidade(valor: String) = _uiState.update { it.copy(quantidade = valor.sanitizarNumeroInput(), mensagemErro = null) }
 
     fun calcularResultado() {
         val state = _uiState.value
@@ -181,6 +181,7 @@ class CalculadoraViewModel @Inject constructor(
     private fun atualizarErro(mensagem: String) {
         _uiState.update { it.copy(mensagemErro = mensagem) }
 
+}
     private fun densidadePorMaterial(material: String): Double {
         return when (material) {
             "Inox" -> Densidades.INOX
@@ -193,7 +194,6 @@ class CalculadoraViewModel @Inject constructor(
         _uiState.update { it.copy(mensagemErro = mensagem) }
     }
 
-    private fun sanitizarNumero(valor: String): String {
-        return valor.replace(",", ".").filter { it.isDigit() || it == '.' }
-    }
+private fun String.sanitizarNumeroInput(): String {
+    return replace(",", ".").filter { it.isDigit() || it == '.' }
 }

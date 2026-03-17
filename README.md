@@ -35,6 +35,7 @@ Aplicativo Android para cálculo de peso de peças metálicas, simulação de va
 
 ## 📂 Estrutura atual do projeto
 
+
 ### Raiz
 
 ```text
@@ -94,6 +95,8 @@ app/
 ```
 
 ## 🧠 Papel de cada camada
+
+
 
 - **data/local**: banco Room (`dao`, `entity`, `database`) e relações.
 - **data/repository**: acesso aos dados para o restante do app.
