@@ -70,6 +70,19 @@ class CalculadoraViewModel @Inject constructor(
 
         val qtd = state.quantidade.toIntOrNull() ?: 1
         if (qtd <= 0) return _uiState.atualizarErroCalculadora("A quantidade deve ser maior que zero.")
+            ?: return atualizarErro("Informe um comprimento válido (m).")
+        if (comp <= 0) return atualizarErro("Informe um comprimento válido (m).")
+
+        val larg = state.largura.toDoubleOrNull()
+            ?: return atualizarErro("Informe uma medida de largura/base/diâmetro válida.")
+        if (larg <= 0) return atualizarErro("Informe uma medida de largura/base/diâmetro válida.")
+
+        val espMm = state.espessura.toDoubleOrNull()
+            ?: return atualizarErro("Informe uma espessura válida (mm).")
+        if (espMm <= 0) return atualizarErro("Informe uma espessura válida (mm).")
+
+        val qtd = state.quantidade.toIntOrNull() ?: 1
+        if (qtd <= 0) return atualizarErro("A quantidade deve ser maior que zero.")
 
         val baseMm = state.baseAba.toDoubleOrNull()
         val retornoMm = state.retorno.toDoubleOrNull()
@@ -180,9 +193,33 @@ private fun densidadeMaterialCalculadora(material: String): Double {
         "Inox" -> Densidades.INOX
         "Alumínio" -> Densidades.ALUMINIO
         else -> Densidades.ACO
+    private fun densidadePorMaterial(material: String): Double {
+        return when (material) {
+            "Inox" -> Densidades.INOX
+            "Alumínio" -> Densidades.ALUMINIO
+            else -> Densidades.ACO
+        }
+    }
+
+    private fun atualizarErro(mensagem: String) {
+        _uiState.update { it.copy(mensagemErro = mensagem) }
+
+}
+    private fun densidadePorMaterial(material: String): Double {
+        return when (material) {
+            "Inox" -> Densidades.INOX
+            "Alumínio" -> Densidades.ALUMINIO
+            else -> Densidades.ACO
+        }
     }
 }
 
 private fun MutableStateFlow<CalculadoraUiState>.atualizarErroCalculadora(mensagem: String) {
     update { it.copy(mensagemErro = mensagem) }
+    private fun atualizarErro(mensagem: String) {
+        _uiState.update { it.copy(mensagemErro = mensagem) }
+    }
+
+private fun String.sanitizarNumeroInput(): String {
+    return replace(",", ".").filter { it.isDigit() || it == '.' }
 }
