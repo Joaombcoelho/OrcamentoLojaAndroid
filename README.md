@@ -37,6 +37,18 @@ Aplicativo Android para cálculo de peso de peças metálicas, simulação de va
 
 ### Raiz
 
+```text
+.
+├── app/
+├── gradle/
+├── build.gradle.kts
+├── settings.gradle.kts
+├── gradle.properties
+├── gradlew
+└── gradlew.bat
+```
+
+
 
 ### Raiz
 
@@ -97,6 +109,16 @@ app/
 ```
 
 ## 🧠 Papel de cada camada
+
+- **data/local**: banco Room (`dao`, `entity`, `database`) e relações.
+- **data/repository**: acesso aos dados para o restante do app.
+- **di**: módulos de injeção com Hilt.
+- **domain**: regras de negócio e cálculo (ex.: `CalculadoraPeso`).
+- **ui**: telas Compose, componentes, estado e ViewModels.
+- **utils**: utilitários como formatadores e exportação de PDF.
+
+## ▶️ Como executar o projeto
+
 
 - **data/local**: banco Room (`dao`, `entity`, `database`) e relações.
 - **data/repository**: acesso aos dados para o restante do app.
