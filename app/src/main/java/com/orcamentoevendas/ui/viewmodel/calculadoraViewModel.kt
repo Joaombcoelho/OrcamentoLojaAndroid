@@ -57,6 +57,19 @@ class CalculadoraViewModel @Inject constructor(
         val state = _uiState.value
 
         val comp = state.comprimento.toDoubleOrNull()
+            ?: return _uiState.atualizarErroCalculadora("Informe um comprimento válido (m).")
+        if (comp <= 0) return _uiState.atualizarErroCalculadora("Informe um comprimento válido (m).")
+
+        val larg = state.largura.toDoubleOrNull()
+            ?: return _uiState.atualizarErroCalculadora("Informe uma medida de largura/base/diâmetro válida.")
+        if (larg <= 0) return _uiState.atualizarErroCalculadora("Informe uma medida de largura/base/diâmetro válida.")
+
+        val espMm = state.espessura.toDoubleOrNull()
+            ?: return _uiState.atualizarErroCalculadora("Informe uma espessura válida (mm).")
+        if (espMm <= 0) return _uiState.atualizarErroCalculadora("Informe uma espessura válida (mm).")
+
+        val qtd = state.quantidade.toIntOrNull() ?: 1
+        if (qtd <= 0) return _uiState.atualizarErroCalculadora("A quantidade deve ser maior que zero.")
             ?: return atualizarErro("Informe um comprimento válido (m).")
         if (comp <= 0) return atualizarErro("Informe um comprimento válido (m).")
 
@@ -76,24 +89,24 @@ class CalculadoraViewModel @Inject constructor(
 
         when {
             state.tipoPeca == "Tubo Retangular" && (baseMm == null || baseMm <= 0) -> {
-                return atualizarErro("Informe a altura do Tubo Retangular.")
+                return _uiState.atualizarErroCalculadora("Informe a altura do Tubo Retangular.")
             }
 
             state.tipoPeca == "Viga U" && (baseMm == null || baseMm <= 0) -> {
-                return atualizarErro("Informe a base da aba da Viga U.")
+                return _uiState.atualizarErroCalculadora("Informe a base da aba da Viga U.")
             }
 
             state.tipoPeca == "Viga U Enrijecida" && (baseMm == null || baseMm <= 0) -> {
-                return atualizarErro("Informe a base da aba da Viga U Enrijecida.")
+                return _uiState.atualizarErroCalculadora("Informe a base da aba da Viga U Enrijecida.")
             }
 
             state.tipoPeca == "Viga U Enrijecida" && (retornoMm == null || retornoMm <= 0) -> {
-                return atualizarErro("Informe o retorno da Viga U Enrijecida.")
+                return _uiState.atualizarErroCalculadora("Informe o retorno da Viga U Enrijecida.")
             }
         }
 
         val espM = espMm / 1000.0
-        val densidade = densidadePorMaterial(state.material)
+        val densidade = densidadeMaterialCalculadora(state.material)
 
         val peso = when (state.tipoPeca) {
             "Chapa" -> CalculadoraPeso.calcularChapa(comp, larg, espM, densidade)
@@ -141,8 +154,8 @@ class CalculadoraViewModel @Inject constructor(
 
     fun salvarResultadoAtual() {
         val state = _uiState.value
-        val pesoTotal = state.resultadoAtual ?: return atualizarErro("Calcule o resultado antes de salvar.")
-        val comprimento = state.comprimento.toDoubleOrNull() ?: return atualizarErro("Comprimento inválido.")
+        val pesoTotal = state.resultadoAtual ?: return _uiState.atualizarErroCalculadora("Calcule o resultado antes de salvar.")
+        val comprimento = state.comprimento.toDoubleOrNull() ?: return _uiState.atualizarErroCalculadora("Comprimento inválido.")
         val preco = state.precoKg.replace(",", ".").toDoubleOrNull() ?: 0.0
         val valorTotal = pesoTotal * preco
 
@@ -169,7 +182,17 @@ class CalculadoraViewModel @Inject constructor(
             append(" | Espessura: ${state.espessura}")
         }
     }
+}
 
+private fun String.sanitizarNumeroInput(): String {
+    return replace(",", ".").filter { it.isDigit() || it == '.' }
+}
+
+private fun densidadeMaterialCalculadora(material: String): Double {
+    return when (material) {
+        "Inox" -> Densidades.INOX
+        "Alumínio" -> Densidades.ALUMINIO
+        else -> Densidades.ACO
     private fun densidadePorMaterial(material: String): Double {
         return when (material) {
             "Inox" -> Densidades.INOX
@@ -189,7 +212,10 @@ class CalculadoraViewModel @Inject constructor(
             else -> Densidades.ACO
         }
     }
+}
 
+private fun MutableStateFlow<CalculadoraUiState>.atualizarErroCalculadora(mensagem: String) {
+    update { it.copy(mensagemErro = mensagem) }
     private fun atualizarErro(mensagem: String) {
         _uiState.update { it.copy(mensagemErro = mensagem) }
     }
