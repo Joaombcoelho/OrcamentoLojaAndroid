@@ -48,6 +48,21 @@ Aplicativo Android para cálculo de peso de peças metálicas, simulação de va
 └── gradlew.bat
 ```
 
+
+
+### Raiz
+
+```text
+.
+├── app/
+├── gradle/
+├── build.gradle.kts
+├── settings.gradle.kts
+├── gradle.properties
+├── gradlew
+└── gradlew.bat
+```
+
 ### Módulo `app`
 
 ```text
@@ -104,6 +119,28 @@ app/
 
 ## ▶️ Como executar o projeto
 
+
+- **data/local**: banco Room (`dao`, `entity`, `database`) e relações.
+- **data/repository**: acesso aos dados para o restante do app.
+- **di**: módulos de injeção com Hilt.
+- **domain**: regras de negócio e cálculo (ex.: `CalculadoraPeso`).
+- **ui**: telas Compose, componentes, estado e ViewModels.
+- **utils**: utilitários como formatadores e exportação de PDF.
+
+## ▶️ Como executar o projeto
+
+
+
+
+- **data/local**: banco Room (`dao`, `entity`, `database`) e relações.
+- **data/repository**: acesso aos dados para o restante do app.
+- **di**: módulos de injeção com Hilt.
+- **domain**: regras de negócio e cálculo (ex.: `CalculadoraPeso`).
+- **ui**: telas Compose, componentes, estado e ViewModels.
+- **utils**: utilitários como formatadores e exportação de PDF.
+
+## ▶️ Como executar o projeto
+
 ### Pré-requisitos
 
 - **Android Studio Hedgehog ou superior**
@@ -112,6 +149,36 @@ app/
 - Emulador Android ou dispositivo físico (minSdk **24**)
 
 ### 1) Clonar o repositório
+## 🧪 Testes Automatizados
+
+Atualmente o projeto possui uma base inicial de testes cobrindo regras essenciais:
+
+- `CalculadoraPesoTest`: valida fórmulas e casos de borda da camada de domínio
+- `CalculadoraViewModelTest`: valida cálculo por material, mensagens de erro e persistência
+- `MainDispatcherRule`: suporte para testes de corrotinas com `viewModelScope`
+
+Esses testes reduzem regressões e complementam a validação prática no dispositivo Android.
+
+---
+
+## ➡️ Próximo Passo Sugerido
+
+Com material, validações, testes iniciais e navegação via `NavHost` implementados, o próximo passo recomendado é **fortalecer testes instrumentados e fluxo de navegação**:
+
+1. Adicionar testes instrumentados para navegação entre `Calculadora` e `Histórico`
+2. Validar cenários de erro na UI (mensagem de validação visível em tela)
+3. Cobrir fluxo de salvar e compartilhar orçamento no histórico
+
+Isso aumenta a confiabilidade ponta a ponta do app em cenários reais de uso.
+Com material, validações e testes iniciais implementados, o próximo passo recomendado é a **migração da navegação para `NavHost` com rotas tipadas**:
+
+1. Definir destinos tipados para `Calculadora` e `Histórico`
+2. Centralizar argumentos/rotas em um único arquivo de navegação
+3. Cobrir fluxo de navegação com testes instrumentados básicos
+
+Isso reduz erros de rota, melhora manutenção e prepara o app para novas telas.
+
+---
 
 ```bash
 git clone <URL_DO_REPOSITORIO>
@@ -151,6 +218,15 @@ Testes unitários disponíveis em `app/src/test` (incluindo domínio e ViewModel
 ```bash
 ./gradlew :app:testDebugUnitTest
 ```
+- [x] Implementar ViewModel (MVVM incremental)
+- [x] Persistência de histórico com Room
+- [x] Melhorar UI com Material 3 e cards de resultado
+- [x] Compartilhar orçamento em PDF
+- [x] Implementar seleção de material (aço, inox, alumínio)
+- [x] Melhorar validações e mensagens de erro de entrada
+- [x] Migrar navegação para `NavHost` (rotas tipadas)
+- [ ] Migrar navegação para `NavHost` (rotas tipadas)
+- [x] Expandir testes unitários de cálculo e ViewModel
 
 Testes instrumentados (device/emulador conectado):
 
