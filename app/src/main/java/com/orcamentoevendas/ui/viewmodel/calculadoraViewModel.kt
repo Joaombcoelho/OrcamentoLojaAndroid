@@ -44,21 +44,29 @@ class CalculadoraViewModel @Inject constructor(
         }
     }
 
-    fun atualizarMaterial(material: String) = _uiState.update { it.copy(material = material, mensagemErro = null) }
-    fun atualizarComprimento(valor: String) = _uiState.update { it.copy(comprimento = sanitizarNumeroInput(valor), mensagemErro = null) }
-    fun atualizarLargura(valor: String) = _uiState.update { it.copy(largura = sanitizarNumeroInput(valor), mensagemErro = null) }
-    fun atualizarEspessura(valor: String) = _uiState.update { it.copy(espessura = sanitizarNumeroInput(valor), mensagemErro = null) }
-    fun atualizarPrecoKg(valor: String) = _uiState.update { it.copy(precoKg = sanitizarNumeroInput(valor), mensagemErro = null) }
-    fun atualizarBaseAba(valor: String) = _uiState.update { it.copy(baseAba = sanitizarNumeroInput(valor), mensagemErro = null) }
-    fun atualizarRetorno(valor: String) = _uiState.update { it.copy(retorno = sanitizarNumeroInput(valor), mensagemErro = null) }
-    fun atualizarQuantidade(valor: String) = _uiState.update { it.copy(quantidade = sanitizarNumeroInput(valor), mensagemErro = null) }
-    fun atualizarComprimento(valor: String) = _uiState.update { it.copy(comprimento = valor.sanitizarNumeroInput(), mensagemErro = null) }
-    fun atualizarLargura(valor: String) = _uiState.update { it.copy(largura = valor.sanitizarNumeroInput(), mensagemErro = null) }
-    fun atualizarEspessura(valor: String) = _uiState.update { it.copy(espessura = valor.sanitizarNumeroInput(), mensagemErro = null) }
-    fun atualizarPrecoKg(valor: String) = _uiState.update { it.copy(precoKg = valor.sanitizarNumeroInput(), mensagemErro = null) }
-    fun atualizarBaseAba(valor: String) = _uiState.update { it.copy(baseAba = valor.sanitizarNumeroInput(), mensagemErro = null) }
-    fun atualizarRetorno(valor: String) = _uiState.update { it.copy(retorno = valor.sanitizarNumeroInput(), mensagemErro = null) }
-    fun atualizarQuantidade(valor: String) = _uiState.update { it.copy(quantidade = valor.sanitizarNumeroInput(), mensagemErro = null) }
+    fun atualizarMaterial(material: String) =
+        _uiState.update { it.copy(material = material, mensagemErro = null) }
+
+    fun atualizarComprimento(valor: String) =
+        _uiState.update { it.copy(comprimento = valor.sanitizarNumeroInput(), mensagemErro = null) }
+
+    fun atualizarLargura(valor: String) =
+        _uiState.update { it.copy(largura = valor.sanitizarNumeroInput(), mensagemErro = null) }
+
+    fun atualizarEspessura(valor: String) =
+        _uiState.update { it.copy(espessura = valor.sanitizarNumeroInput(), mensagemErro = null) }
+
+    fun atualizarPrecoKg(valor: String) =
+        _uiState.update { it.copy(precoKg = valor.sanitizarNumeroInput(), mensagemErro = null) }
+
+    fun atualizarBaseAba(valor: String) =
+        _uiState.update { it.copy(baseAba = valor.sanitizarNumeroInput(), mensagemErro = null) }
+
+    fun atualizarRetorno(valor: String) =
+        _uiState.update { it.copy(retorno = valor.sanitizarNumeroInput(), mensagemErro = null) }
+
+    fun atualizarQuantidade(valor: String) =
+        _uiState.update { it.copy(quantidade = valor.sanitizarNumeroInput(), mensagemErro = null) }
 
     fun calcularResultado() {
         val state = _uiState.value
@@ -77,32 +85,6 @@ class CalculadoraViewModel @Inject constructor(
 
         val qtd = state.quantidade.toIntOrNull() ?: 1
         if (qtd <= 0) return atualizarErroCalculadora("A quantidade deve ser maior que zero.")
-            ?: return _uiState.atualizarErroCalculadora("Informe um comprimento válido (m).")
-        if (comp <= 0) return _uiState.atualizarErroCalculadora("Informe um comprimento válido (m).")
-
-        val larg = state.largura.toDoubleOrNull()
-            ?: return _uiState.atualizarErroCalculadora("Informe uma medida de largura/base/diâmetro válida.")
-        if (larg <= 0) return _uiState.atualizarErroCalculadora("Informe uma medida de largura/base/diâmetro válida.")
-
-        val espMm = state.espessura.toDoubleOrNull()
-            ?: return _uiState.atualizarErroCalculadora("Informe uma espessura válida (mm).")
-        if (espMm <= 0) return _uiState.atualizarErroCalculadora("Informe uma espessura válida (mm).")
-
-        val qtd = state.quantidade.toIntOrNull() ?: 1
-        if (qtd <= 0) return _uiState.atualizarErroCalculadora("A quantidade deve ser maior que zero.")
-            ?: return atualizarErro("Informe um comprimento válido (m).")
-        if (comp <= 0) return atualizarErro("Informe um comprimento válido (m).")
-
-        val larg = state.largura.toDoubleOrNull()
-            ?: return atualizarErro("Informe uma medida de largura/base/diâmetro válida.")
-        if (larg <= 0) return atualizarErro("Informe uma medida de largura/base/diâmetro válida.")
-
-        val espMm = state.espessura.toDoubleOrNull()
-            ?: return atualizarErro("Informe uma espessura válida (mm).")
-        if (espMm <= 0) return atualizarErro("Informe uma espessura válida (mm).")
-
-        val qtd = state.quantidade.toIntOrNull() ?: 1
-        if (qtd <= 0) return atualizarErro("A quantidade deve ser maior que zero.")
 
         val baseMm = state.baseAba.toDoubleOrNull()
         val retornoMm = state.retorno.toDoubleOrNull()
@@ -122,19 +104,6 @@ class CalculadoraViewModel @Inject constructor(
 
             state.tipoPeca == "Viga U Enrijecida" && (retornoMm == null || retornoMm <= 0) -> {
                 return atualizarErroCalculadora("Informe o retorno da Viga U Enrijecida.")
-                return _uiState.atualizarErroCalculadora("Informe a altura do Tubo Retangular.")
-            }
-
-            state.tipoPeca == "Viga U" && (baseMm == null || baseMm <= 0) -> {
-                return _uiState.atualizarErroCalculadora("Informe a base da aba da Viga U.")
-            }
-
-            state.tipoPeca == "Viga U Enrijecida" && (baseMm == null || baseMm <= 0) -> {
-                return _uiState.atualizarErroCalculadora("Informe a base da aba da Viga U Enrijecida.")
-            }
-
-            state.tipoPeca == "Viga U Enrijecida" && (retornoMm == null || retornoMm <= 0) -> {
-                return _uiState.atualizarErroCalculadora("Informe o retorno da Viga U Enrijecida.")
             }
         }
 
@@ -187,10 +156,12 @@ class CalculadoraViewModel @Inject constructor(
 
     fun salvarResultadoAtual() {
         val state = _uiState.value
-        val pesoTotal = state.resultadoAtual ?: return atualizarErroCalculadora("Calcule o resultado antes de salvar.")
-        val comprimento = state.comprimento.toDoubleOrNull() ?: return atualizarErroCalculadora("Comprimento inválido.")
-        val pesoTotal = state.resultadoAtual ?: return _uiState.atualizarErroCalculadora("Calcule o resultado antes de salvar.")
-        val comprimento = state.comprimento.toDoubleOrNull() ?: return _uiState.atualizarErroCalculadora("Comprimento inválido.")
+        val pesoTotal =
+            state.resultadoAtual
+                ?: return atualizarErroCalculadora("Calcule o resultado antes de salvar.")
+        val comprimento =
+            state.comprimento.toDoubleOrNull()
+                ?: return atualizarErroCalculadora("Comprimento inválido.")
         val preco = state.precoKg.replace(",", ".").toDoubleOrNull() ?: 0.0
         val valorTotal = pesoTotal * preco
 
@@ -217,19 +188,8 @@ class CalculadoraViewModel @Inject constructor(
             append(" | Espessura: ${state.espessura}")
         }
     }
-}
 
     private fun densidadeMaterialCalculadora(material: String): Double {
-private fun String.sanitizarNumeroInput(): String {
-    return replace(",", ".").filter { it.isDigit() || it == '.' }
-}
-
-private fun densidadeMaterialCalculadora(material: String): Double {
-    return when (material) {
-        "Inox" -> Densidades.INOX
-        "Alumínio" -> Densidades.ALUMINIO
-        else -> Densidades.ACO
-    private fun densidadePorMaterial(material: String): Double {
         return when (material) {
             "Inox" -> Densidades.INOX
             "Alumínio" -> Densidades.ALUMINIO
@@ -239,24 +199,8 @@ private fun densidadeMaterialCalculadora(material: String): Double {
 
     private fun atualizarErroCalculadora(mensagem: String) {
         _uiState.update { it.copy(mensagemErro = mensagem) }
-
-    private fun sanitizarNumeroInput(valor: String): String {
-        return valor.replace(",", ".").filter { it.isDigit() || it == '.' }
-}
-    private fun densidadePorMaterial(material: String): Double {
-        return when (material) {
-            "Inox" -> Densidades.INOX
-            "Alumínio" -> Densidades.ALUMINIO
-            else -> Densidades.ACO
-        }
     }
 }
-
-private fun MutableStateFlow<CalculadoraUiState>.atualizarErroCalculadora(mensagem: String) {
-    update { it.copy(mensagemErro = mensagem) }
-    private fun atualizarErro(mensagem: String) {
-        _uiState.update { it.copy(mensagemErro = mensagem) }
-    }
 
 private fun String.sanitizarNumeroInput(): String {
     return replace(",", ".").filter { it.isDigit() || it == '.' }
