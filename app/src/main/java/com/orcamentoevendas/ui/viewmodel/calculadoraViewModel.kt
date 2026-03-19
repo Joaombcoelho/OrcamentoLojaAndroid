@@ -179,6 +179,20 @@ class CalculadoraViewModel @Inject constructor(
         }
     }
 
+    fun limparHistorico() {
+        viewModelScope.launch {
+            repository.limparHistorico()
+        }
+    }
+
+    fun restaurarHistorico(orcamentos: List<OrcamentoEntity>) {
+        viewModelScope.launch {
+            orcamentos.forEach { orcamento ->
+                repository.inserir(orcamento.copy(id = 0))
+            }
+        }
+    }
+
     private fun montarDimensoes(state: CalculadoraUiState): String {
         return buildString {
             append("Material: ${state.material}")
