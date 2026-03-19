@@ -48,21 +48,6 @@ Aplicativo Android para cálculo de peso de peças metálicas, simulação de va
 └── gradlew.bat
 ```
 
-
-
-### Raiz
-
-```text
-.
-├── app/
-├── gradle/
-├── build.gradle.kts
-├── settings.gradle.kts
-├── gradle.properties
-├── gradlew
-└── gradlew.bat
-```
-
 ### Módulo `app`
 
 ```text
@@ -117,29 +102,6 @@ app/
 - **ui**: telas Compose, componentes, estado e ViewModels.
 - **utils**: utilitários como formatadores e exportação de PDF.
 
-## ▶️ Como executar o projeto
-
-
-- **data/local**: banco Room (`dao`, `entity`, `database`) e relações.
-- **data/repository**: acesso aos dados para o restante do app.
-- **di**: módulos de injeção com Hilt.
-- **domain**: regras de negócio e cálculo (ex.: `CalculadoraPeso`).
-- **ui**: telas Compose, componentes, estado e ViewModels.
-- **utils**: utilitários como formatadores e exportação de PDF.
-
-## ▶️ Como executar o projeto
-
-
-
-
-- **data/local**: banco Room (`dao`, `entity`, `database`) e relações.
-- **data/repository**: acesso aos dados para o restante do app.
-- **di**: módulos de injeção com Hilt.
-- **domain**: regras de negócio e cálculo (ex.: `CalculadoraPeso`).
-- **ui**: telas Compose, componentes, estado e ViewModels.
-- **utils**: utilitários como formatadores e exportação de PDF.
-
-## ▶️ Como executar o projeto
 
 ### Pré-requisitos
 
@@ -148,7 +110,41 @@ app/
 - Android SDK instalado (compileSdk/targetSdk **34**)
 - Emulador Android ou dispositivo físico (minSdk **24**)
 
+
+## ▶️ Como executar o projeto
+
 ### 1) Clonar o repositório
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd OrcamentoLojaAndroid
+```
+
+### 2) Abrir no Android Studio
+
+1. Abra o Android Studio
+2. Clique em **Open** e selecione a pasta do projeto
+3. Aguarde o **Gradle Sync** terminar
+
+### 3) Executar o app
+
+1. Selecione o device (emulador ou celular via USB)
+2. Clique em **Run 'app'**
+
+### 4) Executar via terminal (opcional)
+
+> No Linux/macOS:
+
+```bash
+chmod +x gradlew
+./gradlew :app:installDebug
+```
+
+> No Windows (PowerShell/CMD):
+
+```bash
+gradlew.bat :app:installDebug
+```
+
 ## 🧪 Testes Automatizados
 
 Atualmente o projeto possui uma base inicial de testes cobrindo regras essenciais:
@@ -180,36 +176,6 @@ Isso reduz erros de rota, melhora manutenção e prepara o app para novas telas.
 
 ---
 
-```bash
-git clone <URL_DO_REPOSITORIO>
-cd OrcamentoLojaAndroid
-```
-
-### 2) Abrir no Android Studio
-
-1. Abra o Android Studio
-2. Clique em **Open** e selecione a pasta do projeto
-3. Aguarde o **Gradle Sync** terminar
-
-### 3) Executar o app
-
-1. Selecione o device (emulador ou celular via USB)
-2. Clique em **Run 'app'**
-
-### 4) Executar via terminal (opcional)
-
-> No Linux/macOS:
-
-```bash
-chmod +x gradlew
-./gradlew :app:installDebug
-```
-
-> No Windows (PowerShell/CMD):
-
-```bash
-gradlew.bat :app:installDebug
-```
 
 ## 🧪 Testes
 
