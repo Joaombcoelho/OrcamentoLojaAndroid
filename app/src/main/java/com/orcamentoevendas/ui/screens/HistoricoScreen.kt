@@ -5,9 +5,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +25,7 @@ import com.orcamentoevendas.ui.viewmodel.CalculadoraViewModel
 import com.orcamentoevendas.utils.PdfExporter
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.launch
 
 @Composable
 fun HistoricoScreen(
@@ -26,36 +33,98 @@ fun HistoricoScreen(
     uiState: CalculadoraUiState,
     onVoltar: () -> Unit
 ) {
+    var mostrarDialogLimparHistorico by remember { mutableStateOf(false) }
+    var historicoRemovido by remember { mutableStateOf<List<OrcamentoEntity>>(emptyList()) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-
-        Button(onClick = { onVoltar() }) {
-            Text("Voltar")
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        Text(
-            "Histórico de Orçamentos",
-            style = MaterialTheme.typography.titleLarge
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
         ) {
 
-            items(uiState.historico) { orcamento ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(onClick = { onVoltar() }) {
+                    Text("Voltar")
+                }
 
-                OrcamentoCard(orcamento)
+                OutlinedButton(
+                    onClick = { mostrarDialogLimparHistorico = true },
+                    enabled = uiState.historico.isNotEmpty()
+                ) {
+                    Icon(Icons.Default.DeleteSweep, contentDescription = null)
+                    Spacer(Modifier.width(6.dp))
+                    Text("Limpar histórico")
+                }
+            }
 
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                "Histórico de Orçamentos",
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+
+                items(uiState.historico) { orcamento ->
+
+                    OrcamentoCard(orcamento)
+
+                }
             }
         }
+    }
+
+    if (mostrarDialogLimparHistorico) {
+        AlertDialog(
+            onDismissRequest = { mostrarDialogLimparHistorico = false },
+            title = { Text("Limpar histórico") },
+            text = { Text("Deseja remover todos os orçamentos salvos?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        historicoRemovido = uiState.historico.toList()
+                        viewModel.limparHistorico()
+                        mostrarDialogLimparHistorico = false
+
+                        coroutineScope.launch {
+                            val resultado = snackbarHostState.showSnackbar(
+                                message = "Histórico limpo",
+                                actionLabel = "Desfazer",
+                                withDismissAction = true
+                            )
+
+                            if (resultado == SnackbarResult.ActionPerformed) {
+                                viewModel.restaurarHistorico(historicoRemovido)
+                            }
+
+                            historicoRemovido = emptyList()
+                        }
+                    }
+                ) {
+                    Text("Limpar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { mostrarDialogLimparHistorico = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
 
