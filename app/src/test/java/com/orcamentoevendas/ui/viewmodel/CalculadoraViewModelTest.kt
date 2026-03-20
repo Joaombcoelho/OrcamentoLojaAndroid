@@ -3,6 +3,7 @@ package com.orcamentoevendas.ui.viewmodel
 import com.orcamentoevendas.data.local.dao.OrcamentoDao
 import com.orcamentoevendas.data.local.entity.OrcamentoEntity
 import com.orcamentoevendas.data.repository.OrcamentoRepository
+import com.orcamentoevendas.domain.TipoPeca
 import com.orcamentoevendas.testutils.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +28,7 @@ class CalculadoraViewModelTest {
         val repository = OrcamentoRepository(dao)
         val viewModel = CalculadoraViewModel(repository)
 
-        viewModel.atualizarTipoPeca("Chapa")
+        viewModel.atualizarTipoPeca(TipoPeca.CHAPA)
         viewModel.atualizarMaterial("Aço")
         viewModel.atualizarComprimento("2")
         viewModel.atualizarLargura("1")
@@ -47,7 +48,7 @@ class CalculadoraViewModelTest {
         val repository = OrcamentoRepository(dao)
         val viewModel = CalculadoraViewModel(repository)
 
-        viewModel.atualizarTipoPeca("Chapa")
+        viewModel.atualizarTipoPeca(TipoPeca.CHAPA)
         viewModel.atualizarComprimento("2")
         viewModel.atualizarLargura("1")
         viewModel.atualizarEspessura("10")
@@ -72,7 +73,7 @@ class CalculadoraViewModelTest {
         val repository = OrcamentoRepository(dao)
         val viewModel = CalculadoraViewModel(repository)
 
-        viewModel.atualizarTipoPeca("Tubo Retangular")
+        viewModel.atualizarTipoPeca(TipoPeca.TUBO_RETANGULAR)
         viewModel.atualizarComprimento("2")
         viewModel.atualizarLargura("100")
         viewModel.atualizarEspessura("2")
@@ -88,7 +89,7 @@ class CalculadoraViewModelTest {
         val repository = OrcamentoRepository(dao)
         val viewModel = CalculadoraViewModel(repository)
 
-        viewModel.atualizarTipoPeca("Chapa")
+        viewModel.atualizarTipoPeca(TipoPeca.CHAPA)
         viewModel.atualizarMaterial("Aço")
         viewModel.atualizarComprimento("2")
         viewModel.atualizarLargura("1")

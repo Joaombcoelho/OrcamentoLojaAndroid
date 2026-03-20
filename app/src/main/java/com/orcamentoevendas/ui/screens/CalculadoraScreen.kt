@@ -1,6 +1,5 @@
 package com.orcamentoevendas.ui.screens
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.RowScope.weight
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.orcamentoevendas.domain.TipoPeca
 import com.orcamentoevendas.ui.components.ResultadoCard
 import com.orcamentoevendas.ui.state.CalculadoraUiState
 import com.orcamentoevendas.ui.viewmodel.CalculadoraViewModel
@@ -45,217 +45,25 @@ fun CalculadoraScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val materiais = listOf("Aço", "Inox", "Alumínio")
-
-        Text("Material", style = MaterialTheme.typography.titleSmall)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            materiais.forEach { material ->
-                val selecionado = uiState.material == material
-                Button(
-                    onClick = { viewModel.atualizarMaterial(material) },
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor =
-                            if (selecionado) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.surfaceVariant
-                    )
-                ) {
-                    Text(
-                        material,
-                        color =
-                            if (selecionado) MaterialTheme.colorScheme.onPrimary
-                            else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        val tipos = listOf(
-            "Chapa",
-            "Tubo Quadrado",
-            "Tubo Retangular",
-            "Viga U",
-            "Viga U Enrijecida",
-            "Tubo Redondo"
+        MaterialSelector(
+            materialSelecionado = uiState.material,
+            onMaterialSelecionado = viewModel::atualizarMaterial
         )
 
-        val linhas = tipos.chunked(2)
+        Spacer(modifier = Modifier.height(16.dp))
 
-        linhas.forEach { linha ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                linha.forEach { tipo ->
-                    val selecionado = uiState.tipoPeca == tipo
-
-                    Button(
-                        onClick = { viewModel.atualizarTipoPeca(tipo) },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor =
-                                if (selecionado) {
-                                    MaterialTheme.colorScheme.primary
-                                } else {
-                                    MaterialTheme.colorScheme.surfaceVariant
-                                }
-                        )
-                    ) {
-                        Text(
-                            text = tipo,
-                            color =
-                                if (selecionado) {
-                                    MaterialTheme.colorScheme.onPrimary
-                                } else {
-                                    MaterialTheme.colorScheme.onSurfaceVariant
-                                }
-                        )
-                    }
-                }
-
-                if (linha.size == 1) {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+        TipoPecaSelector(
+            tipoSelecionado = uiState.tipoPeca,
+            onTipoSelecionado = viewModel::atualizarTipoPeca
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        when (uiState.tipoPeca) {
-            "Chapa" -> {
-                OutlinedTextField(
-                    value = uiState.largura,
-                    onValueChange = viewModel::atualizarLargura,
-                    label = { Text("Largura (m)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-
-                OutlinedTextField(
-                    value = uiState.espessura,
-                    onValueChange = viewModel::atualizarEspessura,
-                    label = { Text("Espessura (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-            }
-
-            "Tubo Quadrado" -> {
-                OutlinedTextField(
-                    value = uiState.largura,
-                    onValueChange = viewModel::atualizarLargura,
-                    label = { Text("Lado Externo (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-
-                OutlinedTextField(
-                    value = uiState.espessura,
-                    onValueChange = viewModel::atualizarEspessura,
-                    label = { Text("Espessura (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-            }
-
-            "Tubo Retangular" -> {
-                OutlinedTextField(
-                    value = uiState.largura,
-                    onValueChange = viewModel::atualizarLargura,
-                    label = { Text("Base (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-
-                OutlinedTextField(
-                    value = uiState.baseAba,
-                    onValueChange = viewModel::atualizarBaseAba,
-                    label = { Text("Altura (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-
-                OutlinedTextField(
-                    value = uiState.espessura,
-                    onValueChange = viewModel::atualizarEspessura,
-                    label = { Text("Espessura (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-            }
-
-            "Viga U" -> {
-                OutlinedTextField(
-                    value = uiState.largura,
-                    onValueChange = viewModel::atualizarLargura,
-                    label = { Text("Altura (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-
-                OutlinedTextField(
-                    value = uiState.baseAba,
-                    onValueChange = viewModel::atualizarBaseAba,
-                    label = { Text("Base da Aba (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-
-                OutlinedTextField(
-                    value = uiState.espessura,
-                    onValueChange = viewModel::atualizarEspessura,
-                    label = { Text("Espessura (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-            }
-
-            "Viga U Enrijecida" -> {
-                OutlinedTextField(
-                    value = uiState.largura,
-                    onValueChange = viewModel::atualizarLargura,
-                    label = { Text("Altura (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-
-                OutlinedTextField(
-                    value = uiState.baseAba,
-                    onValueChange = viewModel::atualizarBaseAba,
-                    label = { Text("Base da Aba (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-
-                OutlinedTextField(
-                    value = uiState.retorno,
-                    onValueChange = viewModel::atualizarRetorno,
-                    label = { Text("Retorno (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-
-                OutlinedTextField(
-                    value = uiState.espessura,
-                    onValueChange = viewModel::atualizarEspessura,
-                    label = { Text("Espessura (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-            }
-
-            "Tubo Redondo" -> {
-                OutlinedTextField(
-                    value = uiState.largura,
-                    onValueChange = viewModel::atualizarLargura,
-                    label = { Text("Diâmetro (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-
-                OutlinedTextField(
-                    value = uiState.espessura,
-                    onValueChange = viewModel::atualizarEspessura,
-                    label = { Text("Espessura (mm)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                )
-            }
-        }
+        CamposPorTipoPeca(
+            tipoPeca = uiState.tipoPeca,
+            uiState = uiState,
+            viewModel = viewModel
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -328,4 +136,147 @@ fun CalculadoraScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
     }
+}
+
+@Composable
+private fun MaterialSelector(
+    materialSelecionado: String,
+    onMaterialSelecionado: (String) -> Unit
+) {
+    val materiais = listOf("Aço", "Inox", "Alumínio")
+
+    Text("Material", style = MaterialTheme.typography.titleSmall)
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        materiais.forEach { material ->
+            val selecionado = materialSelecionado == material
+            Button(
+                onClick = { onMaterialSelecionado(material) },
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor =
+                        if (selecionado) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Text(
+                    material,
+                    color =
+                        if (selecionado) MaterialTheme.colorScheme.onPrimary
+                        else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TipoPecaSelector(
+    tipoSelecionado: TipoPeca,
+    onTipoSelecionado: (TipoPeca) -> Unit
+) {
+    val linhas = TipoPeca.entries.chunked(2)
+
+    linhas.forEach { linha ->
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            linha.forEach { tipo ->
+                val selecionado = tipoSelecionado == tipo
+
+                Button(
+                    onClick = { onTipoSelecionado(tipo) },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor =
+                            if (selecionado) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.surfaceVariant
+                            }
+                    )
+                ) {
+                    Text(
+                        text = tipo.label,
+                        color =
+                            if (selecionado) {
+                                MaterialTheme.colorScheme.onPrimary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                    )
+                }
+            }
+
+            if (linha.size == 1) {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+    }
+}
+
+@Composable
+private fun CamposPorTipoPeca(
+    tipoPeca: TipoPeca,
+    uiState: CalculadoraUiState,
+    viewModel: CalculadoraViewModel
+) {
+    when (tipoPeca) {
+        TipoPeca.CHAPA -> {
+            CampoNumerico(uiState.largura, viewModel::atualizarLargura, "Largura (m)")
+            CampoNumerico(uiState.espessura, viewModel::atualizarEspessura, "Espessura (mm)")
+        }
+
+        TipoPeca.TUBO_QUADRADO -> {
+            CampoNumerico(uiState.largura, viewModel::atualizarLargura, "Lado Externo (mm)")
+            CampoNumerico(uiState.espessura, viewModel::atualizarEspessura, "Espessura (mm)")
+        }
+
+        TipoPeca.TUBO_RETANGULAR -> {
+            CampoNumerico(uiState.largura, viewModel::atualizarLargura, "Base (mm)")
+            CampoNumerico(uiState.baseAba, viewModel::atualizarBaseAba, "Altura (mm)")
+            CampoNumerico(uiState.espessura, viewModel::atualizarEspessura, "Espessura (mm)")
+        }
+
+        TipoPeca.VIGA_U -> {
+            CampoNumerico(uiState.largura, viewModel::atualizarLargura, "Altura (mm)")
+            CampoNumerico(uiState.baseAba, viewModel::atualizarBaseAba, "Base da Aba (mm)")
+            CampoNumerico(uiState.espessura, viewModel::atualizarEspessura, "Espessura (mm)")
+        }
+
+        TipoPeca.VIGA_U_ENRIJECIDA -> {
+            CampoNumerico(uiState.largura, viewModel::atualizarLargura, "Altura (mm)")
+            CampoNumerico(uiState.baseAba, viewModel::atualizarBaseAba, "Base da Aba (mm)")
+            CampoNumerico(uiState.retorno, viewModel::atualizarRetorno, "Retorno (mm)")
+            CampoNumerico(uiState.espessura, viewModel::atualizarEspessura, "Espessura (mm)")
+        }
+
+        TipoPeca.TUBO_REDONDO -> {
+            CampoNumerico(uiState.largura, viewModel::atualizarLargura, "Diâmetro (mm)")
+            CampoNumerico(uiState.espessura, viewModel::atualizarEspessura, "Espessura (mm)")
+        }
+    }
+}
+
+@Composable
+private fun CampoNumerico(
+    valor: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    keyboardType: KeyboardType = KeyboardType.Decimal
+) {
+    OutlinedTextField(
+        value = valor,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+    )
 }
