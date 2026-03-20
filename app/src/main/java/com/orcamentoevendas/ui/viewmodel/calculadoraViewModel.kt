@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.orcamentoevendas.data.local.entity.OrcamentoEntity
 import com.orcamentoevendas.data.repository.OrcamentoRepository
 import com.orcamentoevendas.domain.CalculadoraPeso
+import com.orcamentoevendas.domain.TipoPeca
 import com.orcamentoevendas.ui.state.CalculadoraUiState
 import com.orcamentoevendas.utils.Densidades
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,7 @@ class CalculadoraViewModel @Inject constructor(
         }
     }
 
-    fun atualizarTipoPeca(tipo: String) {
+    fun atualizarTipoPeca(tipo: TipoPeca) {
         _uiState.update {
             it.copy(
                 tipoPeca = tipo,
@@ -90,19 +91,19 @@ class CalculadoraViewModel @Inject constructor(
         val retornoMm = state.retorno.toDoubleOrNull()
 
         when {
-            state.tipoPeca == "Tubo Retangular" && (baseMm == null || baseMm <= 0) -> {
+            state.tipoPeca == TipoPeca.TUBO_RETANGULAR && (baseMm == null || baseMm <= 0) -> {
                 return atualizarErroCalculadora("Informe a altura do Tubo Retangular.")
             }
 
-            state.tipoPeca == "Viga U" && (baseMm == null || baseMm <= 0) -> {
+            state.tipoPeca == TipoPeca.VIGA_U && (baseMm == null || baseMm <= 0) -> {
                 return atualizarErroCalculadora("Informe a base da aba da Viga U.")
             }
 
-            state.tipoPeca == "Viga U Enrijecida" && (baseMm == null || baseMm <= 0) -> {
+            state.tipoPeca == TipoPeca.VIGA_U_ENRIJECIDA && (baseMm == null || baseMm <= 0) -> {
                 return atualizarErroCalculadora("Informe a base da aba da Viga U Enrijecida.")
             }
 
-            state.tipoPeca == "Viga U Enrijecida" && (retornoMm == null || retornoMm <= 0) -> {
+            state.tipoPeca == TipoPeca.VIGA_U_ENRIJECIDA && (retornoMm == null || retornoMm <= 0) -> {
                 return atualizarErroCalculadora("Informe o retorno da Viga U Enrijecida.")
             }
         }
@@ -111,25 +112,25 @@ class CalculadoraViewModel @Inject constructor(
         val densidade = densidadeMaterialCalculadora(state.material)
 
         val peso = when (state.tipoPeca) {
-            "Chapa" -> CalculadoraPeso.calcularChapa(comp, larg, espM, densidade)
-            "Tubo Quadrado" -> {
+            TipoPeca.CHAPA -> CalculadoraPeso.calcularChapa(comp, larg, espM, densidade)
+            TipoPeca.TUBO_QUADRADO -> {
                 val ladoM = larg / 1000.0
                 CalculadoraPeso.calcularTuboQuadrado(ladoM, espM, comp, densidade)
             }
 
-            "Tubo Retangular" -> {
+            TipoPeca.TUBO_RETANGULAR -> {
                 val baseM = larg / 1000.0
                 val alturaM = baseMm!! / 1000.0
                 CalculadoraPeso.calcularTuboRetangular(baseM, alturaM, espM, comp, densidade)
             }
 
-            "Viga U" -> {
+            TipoPeca.VIGA_U -> {
                 val alturaM = larg / 1000.0
                 val baseM = baseMm!! / 1000.0
                 CalculadoraPeso.calcularVigaU(alturaM, baseM, espM, comp, densidade)
             }
 
-            "Viga U Enrijecida" -> {
+            TipoPeca.VIGA_U_ENRIJECIDA -> {
                 val alturaM = larg / 1000.0
                 val baseM = baseMm!! / 1000.0
                 val retornoM = retornoMm!! / 1000.0
@@ -143,12 +144,10 @@ class CalculadoraViewModel @Inject constructor(
                 )
             }
 
-            "Tubo Redondo" -> {
+            TipoPeca.TUBO_REDONDO -> {
                 val diametroM = larg / 1000.0
                 CalculadoraPeso.calcularTuboRedondo(diametroM, espM, comp, densidade)
             }
-
-            else -> 0.0
         }
 
         _uiState.update { it.copy(resultadoAtual = peso * qtd, mensagemErro = null) }
@@ -168,7 +167,7 @@ class CalculadoraViewModel @Inject constructor(
         viewModelScope.launch {
             repository.inserir(
                 OrcamentoEntity(
-                    tipoPeca = state.tipoPeca,
+                    tipoPeca = state.tipoPeca.label,
                     comprimento = comprimento,
                     dimensoes = montarDimensoes(state),
                     pesoTotal = pesoTotal,
@@ -196,6 +195,7 @@ class CalculadoraViewModel @Inject constructor(
     private fun montarDimensoes(state: CalculadoraUiState): String {
         return buildString {
             append("Material: ${state.material}")
+            append(" | Tipo: ${state.tipoPeca.label}")
             append(" | Largura: ${state.largura}")
             if (state.baseAba.isNotBlank()) append(" | Base/Aba: ${state.baseAba}")
             if (state.retorno.isNotBlank()) append(" | Retorno: ${state.retorno}")
